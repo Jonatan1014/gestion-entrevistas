@@ -70,6 +70,7 @@ class RoleSeeder extends Seeder
         'create-roles',
         'edit-roles',
         'delete-roles',
+        'manage-roles',
     ];
 
     /**

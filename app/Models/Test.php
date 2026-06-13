@@ -58,41 +58,10 @@ class Test extends Model
     }
 
     /**
-     * Calculate the score for a multiple choice set of answers.
-     *
-     * @param  array<int, array<int>>  $answers  question_id => selected option indices
+     * Get the results recorded for the test.
      */
-    public function calculateMultipleChoiceScore(array $answers): float
+    public function results(): HasMany
     {
-        if ($this->type !== TestType::MULTIPLE_CHOICE) {
-            return 0;
-        }
-
-        $score = 0.0;
-
-        foreach ($this->questions as $question) {
-            $selected = $answers[$question->id] ?? [];
-            sort($selected);
-
-            $correct = $question->correct_answer_indices ?? [];
-            sort($correct);
-
-            if ($selected === $correct) {
-                $score += (float) $question->points;
-            }
-        }
-
-        return $score;
-    }
-
-    /**
-     * Apply a manual override to an auto-calculated score.
-     */
-    public function applyManualOverride(float $calculatedScore, float $manualScore, bool $isManualOverride): array
-    {
-        return [
-            'score' => $isManualOverride ? $manualScore : $calculatedScore,
-            'is_manual_override' => $isManualOverride,
-        ];
+        return $this->hasMany(TestResult::class);
     }
 }

@@ -3,6 +3,7 @@
 use App\Models\Test;
 use App\Models\TestQuestion;
 use App\Models\User;
+use App\Services\ScoringService;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -98,9 +99,9 @@ describe('TST-004: Multiple Choice Test Type', function () {
             $questions[2]->id => [0], // incorrect
         ];
 
-        $score = $test->calculateMultipleChoiceScore($answers);
+        $result = ScoringService::calculateMultipleChoiceScore($test, $answers);
 
-        expect($score)->toBe(20.0);
+        expect($result['score'])->toBe(20.0);
     });
 
     test('manual override of auto-calculated score stores overridden score with flag', function () {
@@ -112,10 +113,10 @@ describe('TST-004: Multiple Choice Test Type', function () {
             'max_score' => 30,
         ]);
 
-        $result = $test->applyManualOverride(
-            calculatedScore: 20,
+        $result = ScoringService::applyManualOverride(
+            autoScore: 20,
             manualScore: 25,
-            isManualOverride: true,
+            justification: 'Partial credit',
         );
 
         expect($result['score'])->toBe(25.0);

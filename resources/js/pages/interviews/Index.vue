@@ -244,7 +244,7 @@ const submitCancel = () => {
                         <Link
                             v-for="link in interviews.links"
                             :key="link.label"
-                            :href="link.url ?? '#"
+                            :href="link.url ?? '#'"
                             :class="[
                                 'rounded px-3 py-1 text-sm',
                                 link.active ? 'bg-primary text-primary-foreground' : 'bg-muted hover:bg-muted/80',

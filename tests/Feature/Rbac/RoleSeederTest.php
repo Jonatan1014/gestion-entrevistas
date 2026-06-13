@@ -68,6 +68,7 @@ test('Entrevistador role has exactly the specified limited permissions', functio
         'edit-applicants',
         'create-interviews',
         'edit-interviews',
+        'manage-interviews',
         'view-interviews',
         'view-tests',
         'view-test-results',

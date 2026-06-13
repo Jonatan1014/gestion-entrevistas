@@ -81,5 +81,5 @@ Chain strategy: stacked-to-main
 
 ## Phase 8: Integration & Polish
 
-- [ ] 8.1 Add sidebar navigation entries and breadcrumbs for all modules in `AppLayout.vue`
-- [ ] 8.2 Run full `php artisan test`; run `npm run build`; fix any failures found
+- [x] 8.1 Add sidebar navigation entries and breadcrumbs for all modules in `AppLayout.vue`
+- [x] 8.2 Run full `php artisan test`; run `npm run build`; fix any failures found

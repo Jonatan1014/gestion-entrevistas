@@ -19,3 +19,4 @@ require __DIR__.'/modules/applicants.php';
 require __DIR__.'/modules/tests.php';
 require __DIR__.'/modules/test-results.php';
 require __DIR__.'/modules/interviews.php';
+require __DIR__.'/modules/reports.php';

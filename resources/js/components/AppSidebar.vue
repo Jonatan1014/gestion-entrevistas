@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
+import ThemeToggle from '@/components/ThemeToggle.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BarChart, BookOpen, Briefcase, Calendar, ClipboardCheck, Folder, LayoutGrid, Shield, Users } from 'lucide-vue-next';
+import { BarChart, Briefcase, Calendar, ClipboardCheck, LayoutGrid, Shield, Users } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 
@@ -71,19 +71,6 @@ const mainNavItems: NavItemWithPermission[] = [
 ];
 
 const visibleNavItems = computed<NavItem[]>(() => mainNavItems.filter((item) => hasPermission(item.permission)));
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
-    },
-];
 </script>
 
 <template>
@@ -105,7 +92,7 @@ const footerNavItems: NavItem[] = [
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
+            <ThemeToggle />
             <NavUser />
         </SidebarFooter>
     </Sidebar>

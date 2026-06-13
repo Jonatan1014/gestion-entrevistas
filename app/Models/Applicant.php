@@ -76,4 +76,12 @@ class Applicant extends Model
     {
         return $this->belongsTo(User::class, 'blocked_by');
     }
+
+    /**
+     * Get the test results for the applicant.
+     */
+    public function testResults(): HasMany
+    {
+        return $this->hasMany(TestResult::class);
+    }
 }

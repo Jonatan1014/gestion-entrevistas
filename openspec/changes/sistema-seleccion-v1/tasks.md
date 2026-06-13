@@ -58,11 +58,11 @@ Chain strategy: stacked-to-main
 
 ## Phase 5: Test Results
 
-- [ ] 5.1 Create `test_results`, `test_answers` migrations; `TestResult`, `TestAnswer` models w/ relationships; RecordScore/OverrideScore/SetFinalStatus FormRequests
-- [ ] 5.2 Create `ScoringService` (pure: weightedAverage, meetsMinGrade, weightSumGuard) + `tests/Unit/Services/ScoringServiceTest.php`
-- [ ] 5.3 Create `TestResultController`, `VacancyResultsController`; `routes/modules/test-results.php`
-- [ ] 5.4 Create Vue pages: `tests/{id}/results/Create.vue`; `MultipleChoiceGrader.vue`, `WeightedAverageDisplay.vue`
-- [ ] 5.5 Pest feature tests for RES-001 to RES-006 + ScoringService unit tests
+- [x] 5.1 Create `test_results`, `test_answers` migrations; `TestResult`, `TestAnswer` models w/ relationships; RecordScore/OverrideScore/SetFinalStatus FormRequests
+- [x] 5.2 Create `ScoringService` (pure: weightedAverage, meetsMinGrade, weightSumGuard) + `tests/Unit/Services/ScoringServiceTest.php`
+- [x] 5.3 Create `TestResultController`, `VacancyResultsController`; `routes/modules/test-results.php`
+- [x] 5.4 Create Vue pages: `tests/{id}/results/Create.vue`; `MultipleChoiceGrader.vue`, `WeightedAverageDisplay.vue`
+- [x] 5.5 Pest feature tests for RES-001 to RES-006 + ScoringService unit tests
 
 ## Phase 6: Interview Management
 

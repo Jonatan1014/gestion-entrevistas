@@ -114,7 +114,12 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <TabsContent value="results">
                     <Card>
                         <CardContent class="pt-6">
-                            <p class="text-sm text-muted-foreground">Results will be available in a future phase.</p>
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm text-muted-foreground">View and record test results for applicants.</p>
+                                <Link :href="route('vacancies.results.index', vacancy.id)">
+                                    <Button variant="outline" size="sm">View Results</Button>
+                                </Link>
+                            </div>
                         </CardContent>
                     </Card>
                 </TabsContent>

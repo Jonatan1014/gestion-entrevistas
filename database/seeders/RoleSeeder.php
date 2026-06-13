@@ -56,8 +56,10 @@ class RoleSeeder extends Seeder
         'view-interviews',
         'create-interviews',
         'edit-interviews',
+        'manage-interviews',
         'complete-interviews',
         'cancel-interviews',
+        'delete-interviews',
 
         // Reports
         'view-reports',
@@ -80,6 +82,7 @@ class RoleSeeder extends Seeder
         'edit-applicants',
         'create-interviews',
         'edit-interviews',
+        'manage-interviews',
         'view-interviews',
         'view-tests',
         'record-test-results',

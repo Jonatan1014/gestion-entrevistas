@@ -86,6 +86,14 @@ class Vacancy extends Model
     }
 
     /**
+     * Get the interviews associated with the vacancy.
+     */
+    public function interviews(): HasMany
+    {
+        return $this->hasMany(Interview::class);
+    }
+
+    /**
      * Check if the vacancy can transition to a given status.
      */
     public function canTransitionTo(VacancyStatus $target): bool

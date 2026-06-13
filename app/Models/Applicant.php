@@ -84,4 +84,12 @@ class Applicant extends Model
     {
         return $this->hasMany(TestResult::class);
     }
+
+    /**
+     * Get the interviews for the applicant.
+     */
+    public function interviews(): HasMany
+    {
+        return $this->hasMany(Interview::class);
+    }
 }

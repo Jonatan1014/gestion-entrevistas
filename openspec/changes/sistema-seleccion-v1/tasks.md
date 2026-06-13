@@ -37,10 +37,10 @@ Chain strategy: stacked-to-main
 
 ## Phase 2: Vacancy Management
 
-- [ ] 2.1 Create `vacancies` migration, `Vacancy` model w/ status enum & relationships, Store/Update/ChangeStatus FormRequests
-- [ ] 2.2 Create `VacancyController` (resource + close/cancel/reopen) and `routes/modules/vacancies.php` with RBAC middleware
-- [ ] 2.3 Create Vue pages: `vacancies/Index.vue`, `Create.vue`, `Edit.vue`, `Show.vue` (Tabs: Tests, Applicants, Reports)
-- [ ] 2.4 Create `VacancyStatusBadge.vue`; Pest feature tests for VAC-001 to VAC-005
+- [x] 2.1 Create `vacancies` migration, `Vacancy` model w/ status enum & relationships, Store/Update/ChangeStatus FormRequests
+- [x] 2.2 Create `VacancyController` (resource + close/cancel/reopen) and `routes/modules/vacancies.php` with RBAC middleware
+- [x] 2.3 Create Vue pages: `vacancies/Index.vue`, `Create.vue`, `Edit.vue`, `Show.vue` (Tabs: Tests, Applicants, Reports)
+- [x] 2.4 Create `VacancyStatusBadge.vue`; Pest feature tests for VAC-001 to VAC-005
 
 ## Phase 3: Applicant Management
 

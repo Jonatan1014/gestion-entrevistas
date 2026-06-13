@@ -1,0 +1,64 @@
+schema: spec-driven
+
+context: |
+  Tech stack: Laravel 12.62.0 (PHP 8.2.4) + Vue 3.5.13 + TypeScript 5.2 + Tailwind CSS 3.4 + Inertia.js 2.0
+  Architecture: Laravel MVC with Inertia SPA bridge; Vue pages auto-resolved from resources/js/pages/
+  Package managers: Composer 2.9 + npm 11.6
+  Database: SQLite (dev and testing, in-memory for tests)
+  Testing: Pest 3.8 (backend only, no frontend test runner)
+  Style: PSR-4 / PSR-12 (Laravel Pint); ESLint + Prettier for frontend; shadcn-vue UI components
+
+strict_tdd: true
+
+testing:
+  backend:
+    command: php artisan test
+    framework: Pest 3.8 (PHPUnit layer)
+    runner: ./vendor/bin/pest
+    layers:
+      unit: true
+      integration: true
+      e2e: false
+    coverage: false
+    ci_provider: GitHub Actions (tests.yml)
+  frontend:
+    command: none
+    framework: none
+    runner: none
+    layers:
+      unit: false
+      integration: false
+      e2e: false
+    coverage: false
+  note: "Strict TDD is enabled for backend (Pest with SQLite in-memory). Frontend has no test runner; TDD cannot be enforced for Vue/TypeScript changes until a test framework (Vitest recommended) is added."
+
+quality:
+  php_lint: ./vendor/bin/pint
+  js_lint: npx eslint resources/js/
+  ts_check: npx vue-tsc --noEmit
+  formatter: npx prettier --write resources/
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+    - Migrations MUST be reversible
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Document architecture decisions with rationale
+    - Include component tree for new Vue pages
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Backend tasks include Pest tests; frontend tasks note missing test coverage
+  apply:
+    - Follow existing Laravel + Inertia conventions
+    - Use shadcn-vue components in resources/js/components/ui/ for new UI
+    tdd: true
+    test_command: php artisan test
+  verify:
+    test_command: php artisan test
+    build_command: npm run build
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas

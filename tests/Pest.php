@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -11,8 +14,8 @@
 |
 */
 
-pest()->extend(Tests\TestCase::class)
-    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+pest()->extend(TestCase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -41,7 +44,26 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+use App\Models\User;
+use Database\Seeders\RoleSeeder;
+
+function createAdmin(): User
 {
-    // ..
+    $admin = User::factory()->create();
+    $admin->assignRole('Admin');
+
+    return $admin;
+}
+
+function createEntrevistador(): User
+{
+    $entrevistador = User::factory()->create();
+    $entrevistador->assignRole('Entrevistador');
+
+    return $entrevistador;
+}
+
+function seedRoles(): void
+{
+    (new RoleSeeder)->run();
 }

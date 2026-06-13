@@ -1,38 +1,14 @@
 <?php
 
 use App\Enums\VacancyStatus;
-use App\Models\User;
 use App\Models\Vacancy;
-use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Inertia\Inertia;
 
 uses(RefreshDatabase::class);
 
 // ============================================================================
 // Helper — create authenticated users with roles
 // ============================================================================
-
-function createAdmin(): User
-{
-    $admin = User::factory()->create();
-    $admin->assignRole('Admin');
-
-    return $admin;
-}
-
-function createEntrevistador(): User
-{
-    $entrevistador = User::factory()->create();
-    $entrevistador->assignRole('Entrevistador');
-
-    return $entrevistador;
-}
-
-function seedRoles(): void
-{
-    (new RoleSeeder)->run();
-}
 
 // ============================================================================
 // VAC-001 — Vacancy CRUD

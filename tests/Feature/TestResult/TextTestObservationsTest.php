@@ -2,25 +2,10 @@
 
 use App\Models\Applicant;
 use App\Models\Test;
-use App\Models\User;
 use App\Models\Vacancy;
-use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
-
-function createAdmin(): User
-{
-    $admin = User::factory()->create();
-    $admin->assignRole('Admin');
-
-    return $admin;
-}
-
-function seedRoles(): void
-{
-    (new RoleSeeder)->run();
-}
 
 function attachApplicantToVacancy(Applicant $applicant, Vacancy $vacancy): void
 {

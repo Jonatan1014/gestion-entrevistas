@@ -2,25 +2,10 @@
 
 use App\Models\Test;
 use App\Models\TestQuestion;
-use App\Models\User;
 use App\Services\ScoringService;
-use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
-
-function createAdmin(): User
-{
-    $admin = User::factory()->create();
-    $admin->assignRole('Admin');
-
-    return $admin;
-}
-
-function seedRoles(): void
-{
-    (new RoleSeeder)->run();
-}
 
 // ============================================================================
 // TST-004 — Multiple Choice Test Type

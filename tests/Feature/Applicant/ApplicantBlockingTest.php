@@ -2,33 +2,10 @@
 
 use App\Enums\VacancyStatus;
 use App\Models\Applicant;
-use App\Models\User;
 use App\Models\Vacancy;
-use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
-
-function createAdmin(): User
-{
-    $admin = User::factory()->create();
-    $admin->assignRole('Admin');
-
-    return $admin;
-}
-
-function createEntrevistador(): User
-{
-    $entrevistador = User::factory()->create();
-    $entrevistador->assignRole('Entrevistador');
-
-    return $entrevistador;
-}
-
-function seedRoles(): void
-{
-    (new RoleSeeder)->run();
-}
 
 // ============================================================================
 // APP-004 — Applicant Blocking

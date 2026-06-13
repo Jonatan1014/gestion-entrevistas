@@ -6,6 +6,7 @@ use App\Enums\VacancyStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vacancy extends Model
@@ -45,6 +46,16 @@ class Vacancy extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Get the applicants associated with the vacancy.
+     */
+    public function applicants(): BelongsToMany
+    {
+        return $this->belongsToMany(Applicant::class, 'vacancy_applicant')
+            ->withPivot('status', 'final_decided_by', 'final_decided_at', 'justification')
+            ->withTimestamps();
     }
 
     /**

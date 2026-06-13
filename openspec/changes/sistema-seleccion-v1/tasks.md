@@ -73,11 +73,11 @@ Chain strategy: stacked-to-main
 
 ## Phase 7: Reports & Export
 
-- [ ] 7.1 Install `barryvdh/laravel-dompdf` + `maatwebsite/excel`; create `SelectionQueryService` (shared query builder for reports)
-- [ ] 7.2 Create `ReportController` (comparison/pipeline/averages/interviews), `ReportExportController` (pdf/excel); `routes/modules/reports.php` w/ Entrevistador scope (RPT-007)
-- [ ] 7.3 Create PDF Blade templates and Excel `FromQuery` export classes for 4 report types
-- [ ] 7.4 Create `reports/Index.vue` (Tabs: Comparison, Pipeline, Averages, Interviews); `ReportFilters.vue`
-- [ ] 7.5 Pest feature tests for RPT-001 to RPT-007
+- [x] 7.1 Install `barryvdh/laravel-dompdf` + `maatwebsite/excel`; create `SelectionQueryService` (shared query builder for reports)
+- [x] 7.2 Create `ReportController` (comparison/pipeline/averages/interviews), `ReportExportController` (pdf/excel); `routes/modules/reports.php` w/ Entrevistador scope (RPT-007)
+- [x] 7.3 Create PDF Blade templates and Excel `FromQuery` export classes for 4 report types
+- [x] 7.4 Create `reports/Index.vue` (Tabs: Comparison, Pipeline, Averages, Interviews); `ReportFilters.vue`
+- [x] 7.5 Pest feature tests for RPT-001 to RPT-007
 
 ## Phase 8: Integration & Polish
 

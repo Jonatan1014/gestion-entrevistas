@@ -95,7 +95,12 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <TabsContent value="tests">
                     <Card>
                         <CardContent class="pt-6">
-                            <p class="text-sm text-muted-foreground">Tests configuration will be available in a future phase.</p>
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm text-muted-foreground">Manage the tests associated with this vacancy.</p>
+                                <Link :href="route('vacancies.tests.index', vacancy.id)">
+                                    <Button variant="outline" size="sm">Manage Tests</Button>
+                                </Link>
+                            </div>
                         </CardContent>
                     </Card>
                 </TabsContent>

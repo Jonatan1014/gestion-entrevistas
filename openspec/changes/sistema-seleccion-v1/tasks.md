@@ -66,10 +66,10 @@ Chain strategy: stacked-to-main
 
 ## Phase 6: Interview Management
 
-- [ ] 6.1 Create `interviews` migration; `Interview` model w/ status enum & relationships; Store/Complete/Cancel FormRequests
-- [ ] 6.2 Create `InterviewController` (resource + complete/cancel); `routes/modules/interviews.php`
-- [ ] 6.3 Create Vue pages: `interviews/Index.vue`, `Create.vue`, `Show.vue`
-- [ ] 6.4 Pest feature tests for INT-001 to INT-006
+- [x] 6.1 Create `interviews` migration; `Interview` model w/ status enum & relationships; Store/Complete/Cancel FormRequests
+- [x] 6.2 Create `InterviewController` (resource + complete/cancel); `routes/modules/interviews.php`
+- [x] 6.3 Create Vue pages: `interviews/Index.vue`, `Create.vue`, `Show.vue`
+- [x] 6.4 Pest feature tests for INT-001 to INT-006
 
 ## Phase 7: Reports & Export
 

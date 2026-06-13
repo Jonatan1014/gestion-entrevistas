@@ -44,10 +44,10 @@ Chain strategy: stacked-to-main
 
 ## Phase 3: Applicant Management
 
-- [ ] 3.1 Create `applicants`, `applicant_documents` migrations; `Applicant`, `ApplicantDocument` models w/ relationships; Store/Update/Block/UploadDocument FormRequests
-- [ ] 3.2 Create `ApplicantController` (resource + block/unblock), `ApplicantDocumentController`; `routes/modules/applicants.php`
-- [ ] 3.3 Create Vue pages: `applicants/Index.vue` (filter), `Create.vue`, `Show.vue` (Tabs: Docs, History, Vacancies); `documents/Index.vue`
-- [ ] 3.4 Create `ApplicantStatusBadge.vue`, `BlockAlertDialog.vue`; Pest tests for APP-001 to APP-006
+- [x] 3.1 Create `applicants`, `applicant_documents` migrations; `Applicant`, `ApplicantDocument` models w/ relationships; Store/Update/Block/UploadDocument FormRequests
+- [x] 3.2 Create `ApplicantController` (resource + block/unblock), `ApplicantDocumentController`; `routes/modules/applicants.php`
+- [x] 3.3 Create Vue pages: `applicants/Index.vue` (filter), `Create.vue`, `Show.vue` (Tabs: Docs, History, Vacancies); `documents/Index.vue`
+- [x] 3.4 Create `ApplicantStatusBadge.vue`, `BlockAlertDialog.vue`; Pest tests for APP-001 to APP-006
 
 ## Phase 4: Test Management
 

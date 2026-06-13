@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -37,6 +38,7 @@ class RoleSeeder extends Seeder
 
         // Tests
         'view-tests',
+        'manage-tests',
         'create-tests',
         'edit-tests',
         'delete-tests',
@@ -109,7 +111,7 @@ class RoleSeeder extends Seeder
         );
 
         // Create a default admin user if it doesn't exist
-        $adminUser = \App\Models\User::firstOrCreate(
+        $adminUser = User::firstOrCreate(
             ['email' => 'admin@sistema-seleccion.test'],
             [
                 'name' => 'Admin',

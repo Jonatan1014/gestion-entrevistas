@@ -16,3 +16,4 @@ require __DIR__.'/auth.php';
 require __DIR__.'/modules/roles.php';
 require __DIR__.'/modules/vacancies.php';
 require __DIR__.'/modules/applicants.php';
+require __DIR__.'/modules/tests.php';

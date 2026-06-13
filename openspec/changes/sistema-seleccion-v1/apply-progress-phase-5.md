@@ -28,7 +28,7 @@ Strict TDD
 | `app/Http/Requests/TestResult/OverrideScoreRequest.php` | Created | Override validation with required justification |
 | `app/Http/Requests/TestResult/SetFinalStatusRequest.php` | Created | Status apt/no_apt validation |
 | `database/migrations/2026_06_13_122021_create_test_results_table.php` | Created | test_results table with unique constraint |
-| `database/migrations/2026_06_13_122021_create_test_answers_table.php` | Created | test_answers table with FK cascade and index |
+| `database/migrations/2026_06_13_122022_create_test_answers_table.php` | Created | test_answers table with FK cascade and index |
 | `database/factories/TestResultFactory.php` | Created | Factory for TestResult with manualOverride state |
 | `database/factories/TestAnswerFactory.php` | Created | Factory for TestAnswer with correct/incorrect states |
 | `database/seeders/RoleSeeder.php` | Modified | Added record-results, view-results, override-results, set-final-status; assigned relevant ones to Entrevistador |
@@ -75,12 +75,19 @@ Strict TDD
 ## Issues Found
 - `php artisan test` returned no output when run against directories on this environment, so `./vendor/bin/pest` was used for directory runs. Individual file runs with `php artisan test` worked correctly.
 - Inertia serializes `84.0` as `84` in JSON, requiring a tolerance-based assertion in `WeightedAverageTest`.
+- The `test_answers` migration initially received the same timestamp as `test_results`; it was renamed to `2026_06_13_122022_create_test_answers_table.php` so it runs after `test_results` and can reference its foreign key.
 
 ## Workload / PR Boundary
 - Mode: stacked-to-main
 - Current work unit: Phase 5 — Test Results + ScoringService
 - Boundary: starts from `feat/sistema-seleccion-v1-phase-4-tests`, ends with Phase 5 implementation complete
 - Estimated review budget impact: This phase is self-contained; approximately 1,300 changed lines across backend/frontend/tests.
+
+## Commit Hashes
+- `fba000f` feat(results): add pure ScoringService, refactor Test helpers, add unit tests
+- `166e9e4` feat(results): add TestResult and VacancyResults controllers, routes and RBAC permissions
+- `dfbb07e` feat(results): add test_results/answers schema, models, form requests, Vue pages and feature tests
+- `fdd87c5` chore(git): ignore .DS_Store files
 
 ## Status
 5/5 tasks complete. Ready for verify.

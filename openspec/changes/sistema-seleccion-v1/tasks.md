@@ -51,10 +51,10 @@ Chain strategy: stacked-to-main
 
 ## Phase 4: Test Management
 
-- [ ] 4.1 Create `tests`, `test_questions`, `vacancy_test` migrations; `Test`, `TestQuestion`, `VacancyTest` models; StoreTest/AttachTest FormRequests (weight sum ≤100%)
-- [ ] 4.2 Create `TestController` (nested resource under vacancies), attachToVacancy controller; `routes/modules/tests.php`
-- [ ] 4.3 Create Vue pages: `vacancies/{id}/tests/Index.vue`, `Create.vue`; `TestQuestionEditor.vue` for multiple_choice
-- [ ] 4.4 Pest feature tests for TST-001 to TST-006
+- [x] 4.1 Create `tests`, `test_questions`, `vacancy_test` migrations; `Test`, `TestQuestion`, `VacancyTest` models; StoreTest/AttachTest FormRequests (weight sum ≤100%)
+- [x] 4.2 Create `TestController` (nested resource under vacancies), attachToVacancy controller; `routes/modules/tests.php`
+- [x] 4.3 Create Vue pages: `vacancies/{id}/tests/Index.vue`, `Create.vue`; `TestQuestionEditor.vue` for multiple_choice
+- [x] 4.4 Pest feature tests for TST-001 to TST-006
 
 ## Phase 5: Test Results
 

@@ -47,6 +47,10 @@ class RoleSeeder extends Seeder
         'record-test-results',
         'view-test-results',
         'override-test-results',
+        'record-results',
+        'view-results',
+        'override-results',
+        'set-final-status',
 
         // Interviews
         'view-interviews',
@@ -79,6 +83,10 @@ class RoleSeeder extends Seeder
         'view-interviews',
         'view-tests',
         'record-test-results',
+        'view-test-results',
+        'record-results',
+        'view-results',
+        'set-final-status',
         'view-reports',
     ];
 

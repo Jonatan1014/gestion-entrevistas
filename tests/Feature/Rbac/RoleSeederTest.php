@@ -5,7 +5,6 @@ use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Traits\HasRoles;
 
 uses(RefreshDatabase::class);
 
@@ -71,7 +70,11 @@ test('Entrevistador role has exactly the specified limited permissions', functio
         'edit-interviews',
         'view-interviews',
         'view-tests',
+        'view-test-results',
         'record-test-results',
+        'record-results',
+        'view-results',
+        'set-final-status',
         'view-reports',
     ];
 

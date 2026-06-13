@@ -59,6 +59,16 @@ class Vacancy extends Model
     }
 
     /**
+     * Get the tests associated with the vacancy.
+     */
+    public function tests(): BelongsToMany
+    {
+        return $this->belongsToMany(Test::class, 'vacancy_test')
+            ->withPivot('weight')
+            ->withTimestamps();
+    }
+
+    /**
      * Scope to get only open vacancies.
      */
     public function scopeOpen($query)

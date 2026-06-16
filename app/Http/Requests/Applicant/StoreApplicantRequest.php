@@ -27,6 +27,8 @@ class StoreApplicantRequest extends FormRequest
             'phone' => ['required', 'string', 'max:30'],
             'email' => ['required', 'email', 'unique:applicants'],
             'address' => ['nullable', 'string', 'max:500'],
+            'vacancy_ids' => ['nullable', 'array'],
+            'vacancy_ids.*' => ['exists:vacancies,id'],
         ];
     }
 }

@@ -132,5 +132,16 @@ class RoleSeeder extends Seeder
             ]
         );
         $adminUser->assignRole($adminRole);
+
+        // Create a default entrevistador user if it doesn't exist
+        $entrevistadorUser = User::firstOrCreate(
+            ['email' => 'entrevistador@sistema-seleccion.test'],
+            [
+                'name' => 'María Entrevistadora',
+                'password' => bcrypt('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+        $entrevistadorUser->assignRole($entrevistadorRole);
     }
 }

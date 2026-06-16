@@ -94,7 +94,7 @@ const handleTypeChange = (value: string) => {
                                 <SelectContent>
                                     <SelectItem value="numeric">Numeric</SelectItem>
                                     <SelectItem value="text">Text</SelectItem>
-                                    <SelectItem value="multiple_choice">Multiple Choice</SelectItem>
+                                    <SelectItem value="multiple_choice">Opción múltiple</SelectItem>
                                 </SelectContent>
                             </Select>
                             <InputError class="mt-2" :message="form.errors.type" />

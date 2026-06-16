@@ -84,7 +84,7 @@ class TestResultController extends Controller
         }
 
         return redirect()->route('test-results.show', [$test, $applicant, $vacancy])
-            ->with('success', 'Score recorded successfully.');
+            ->with('success', 'Puntaje registrado correctamente.');
     }
 
     /**
@@ -134,7 +134,7 @@ class TestResultController extends Controller
         ]);
 
         return redirect()->route('test-results.show', [$test, $applicant, $vacancy])
-            ->with('success', 'Score overridden successfully.');
+            ->with('success', 'Puntaje modificado correctamente.');
     }
 
     /**

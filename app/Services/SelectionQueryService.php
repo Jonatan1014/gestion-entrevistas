@@ -111,7 +111,7 @@ class SelectionQueryService
             ->join('tests', 'tests.id', '=', 'test_results.test_id')
             ->join('vacancies', 'vacancies.id', '=', 'test_results.vacancy_id')
             ->join('applicants', 'applicants.id', '=', 'test_results.applicant_id')
-            ->groupBy('tests.id', 'vacancies.id')
+            ->groupBy('tests.id', 'vacancies.id', 'tests.name', 'vacancies.position')
             ->orderBy('vacancies.position')
             ->orderBy('tests.name');
 
@@ -142,7 +142,7 @@ class SelectionQueryService
             ])
             ->join('applicants', 'applicants.id', '=', 'va.applicant_id')
             ->join('vacancies', 'vacancies.id', '=', 'va.vacancy_id')
-            ->groupBy('va.vacancy_id', 'va.status')
+            ->groupBy('va.vacancy_id', 'va.status', 'vacancies.position')
             ->orderBy('vacancies.position')
             ->orderBy('va.status');
 

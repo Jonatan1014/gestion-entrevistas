@@ -51,18 +51,18 @@ const updateFilters = () => {
 <template>
     <Card>
         <CardHeader>
-            <CardTitle>Filters</CardTitle>
+            <CardTitle>Filtros</CardTitle>
         </CardHeader>
         <CardContent>
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div class="grid gap-2">
-                    <Label for="vacancy_id">Vacancy</Label>
+                    <Label for="vacancy_id">Vacante</Label>
                     <Select v-model="filters.vacancy_id" @update:model-value="updateFilters">
                         <SelectTrigger id="vacancy_id">
-                            <SelectValue placeholder="All vacancies" />
+                            <SelectValue placeholder="Todas las vacantes" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">All vacancies</SelectItem>
+                            <SelectItem value="">Todas las vacantes</SelectItem>
                             <SelectItem v-for="vacancy in vacancies" :key="vacancy.id" :value="String(vacancy.id)">
                                 {{ vacancy.position }}
                             </SelectItem>
@@ -71,7 +71,7 @@ const updateFilters = () => {
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="date_from">Date From</Label>
+                    <Label for="date_from">Desde</Label>
                     <Input
                         id="date_from"
                         v-model="filters.date_from"
@@ -81,7 +81,7 @@ const updateFilters = () => {
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="date_to">Date To</Label>
+                    <Label for="date_to">Hasta</Label>
                     <Input
                         id="date_to"
                         v-model="filters.date_to"
@@ -91,15 +91,15 @@ const updateFilters = () => {
                 </div>
 
                 <div v-if="isAdmin" class="grid gap-2">
-                    <Label for="interviewer_id">Interviewer</Label>
+                    <Label for="interviewer_id">Entrevistador</Label>
                     <Select v-model="filters.interviewer_id" @update:model-value="updateFilters">
                         <SelectTrigger id="interviewer_id">
-                            <SelectValue placeholder="All interviewers" />
+                            <SelectValue placeholder="Todos" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">All interviewers</SelectItem>
-                            <SelectItem v-for="interviewer in interviewers" :key="interviewer.id" :value="String(interviewer.id)">
-                                {{ interviewer.name }}
+                            <SelectItem value="">Todos</SelectItem>
+                            <SelectItem v-for="i in interviewers" :key="i.id" :value="String(i.id)">
+                                {{ i.name }}
                             </SelectItem>
                         </SelectContent>
                     </Select>

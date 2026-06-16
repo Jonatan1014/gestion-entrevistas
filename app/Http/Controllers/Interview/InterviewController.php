@@ -69,15 +69,24 @@ class InterviewController extends Controller
     {
         $isAdmin = $request->user()->hasRole('Admin');
 
-        $applicants = Applicant::orderBy('name')->get();
-        $vacancies = Vacancy::orderBy('position')->get();
+        $vacancies = Vacancy::with('applicants')->orderBy('position')->get(['id', 'position', 'location']);
+
+        // Build vacancy → applicants map for the frontend
+        $vacancyApplicants = $vacancies->mapWithKeys(function ($vacancy) {
+            return [$vacancy->id => $vacancy->applicants->map(fn ($a) => [
+                'id' => $a->id,
+                'name' => $a->name,
+                'email' => $a->email,
+            ])->values()];
+        });
+
         $interviewers = $isAdmin
             ? User::role('Entrevistador')->orderBy('name')->get()
             : collect([$request->user()]);
 
         return Inertia::render('interviews/Create', [
-            'applicants' => $applicants,
-            'vacancies' => $vacancies,
+            'vacancies' => $vacancies->map(fn ($v) => ['id' => $v->id, 'position' => $v->position, 'location' => $v->location])->values(),
+            'vacancyApplicants' => $vacancyApplicants,
             'interviewers' => $interviewers,
             'isAdmin' => $isAdmin,
         ]);
@@ -108,7 +117,7 @@ class InterviewController extends Controller
         }
 
         return redirect()->route('interviews.show', $interview)
-            ->with('success', 'Interview scheduled successfully.');
+            ->with('success', 'Entrevista programada correctamente.');
     }
 
     /**
@@ -136,7 +145,7 @@ class InterviewController extends Controller
         $interview->delete();
 
         return redirect()->route('interviews.index')
-            ->with('success', 'Interview deleted successfully.');
+            ->with('success', 'Entrevista eliminada correctamente.');
     }
 
     /**
@@ -145,17 +154,18 @@ class InterviewController extends Controller
     public function complete(CompleteInterviewRequest $request, Interview $interview): RedirectResponse
     {
         if ($interview->status !== InterviewStatus::PENDING) {
-            abort(403, 'Only pending interviews can be completed.');
+            abort(403, 'Solo se pueden completar entrevistas pendientes.');
         }
 
         $interview->update([
             'status' => InterviewStatus::COMPLETED,
             'observations' => $request->validated('observations'),
+            'score' => $request->validated('score'),
             'completed_at' => now(),
         ]);
 
         return redirect()->route('interviews.show', $interview)
-            ->with('success', 'Interview marked as completed.');
+            ->with('success', 'Entrevista marcada como completada.');
     }
 
     /**
@@ -164,7 +174,7 @@ class InterviewController extends Controller
     public function cancel(CancelInterviewRequest $request, Interview $interview): RedirectResponse
     {
         if ($interview->status !== InterviewStatus::PENDING) {
-            abort(403, 'Only pending interviews can be cancelled.');
+            abort(403, 'Solo se pueden cancelar entrevistas pendientes.');
         }
 
         $interview->update([
@@ -173,6 +183,61 @@ class InterviewController extends Controller
         ]);
 
         return redirect()->route('interviews.show', $interview)
-            ->with('success', 'Interview cancelled successfully.');
+            ->with('success', 'Entrevista cancelada correctamente.');
+    }
+
+    /**
+     * Display a calendar view of scheduled interviews for the current month.
+     */
+    public function calendar(Request $request): Response
+    {
+        $user = $request->user();
+        $year = (int) $request->input('year', now()->year);
+        $month = (int) $request->input('month', now()->month);
+
+        $start = now()->setDate($year, $month, 1)->startOfMonth();
+        $end = $start->copy()->endOfMonth();
+
+        $query = Interview::with(['applicant', 'vacancy', 'interviewer'])
+            ->whereBetween('scheduled_at', [$start, $end])
+            ->orderBy('scheduled_at');
+
+        // Entrevistador only sees own interviews
+        if (! $user->can('manage-interviews')) {
+            $query->where('interviewer_id', $user->id);
+        }
+
+        $interviews = $query->get()->groupBy(fn ($i) => $i->scheduled_at->format('Y-m-d'));
+
+        $calendar = [];
+        foreach ($interviews as $date => $dayInterviews) {
+            $calendar[$date] = $dayInterviews->map(fn ($i) => [
+                'id' => $i->id,
+                'scheduled_at' => $i->scheduled_at->format('H:i'),
+                'type' => $i->type,
+                'status' => $i->status->value,
+                'applicant_name' => $i->applicant->name,
+                'vacancy_position' => $i->vacancy->position,
+                'interviewer_name' => $i->interviewer->name,
+            ]);
+        }
+
+        // Month navigation
+        $prevMonth = $start->copy()->subMonth();
+        $nextMonth = $start->copy()->addMonth();
+        $today = now()->format('Y-m-d');
+
+        return Inertia::render('interviews/Calendar', [
+            'calendar' => $calendar,
+            'year' => $year,
+            'month' => $month,
+            'monthName' => $start->translatedFormat('F Y'),
+            'prevMonth' => ['year' => $prevMonth->year, 'month' => $prevMonth->month],
+            'nextMonth' => ['year' => $nextMonth->year, 'month' => $nextMonth->month],
+            'daysInMonth' => $start->daysInMonth,
+            'firstDayOfWeek' => $start->dayOfWeek,
+            'today' => $today,
+            'canManageInterviews' => $user->can('manage-interviews'),
+        ]);
     }
 }

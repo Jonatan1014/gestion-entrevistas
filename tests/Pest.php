@@ -44,8 +44,15 @@ expect()->extend('toBeOne', function () {
 |
 */
 
+use App\Models\Applicant;
 use App\Models\User;
+use App\Models\Vacancy;
 use Database\Seeders\RoleSeeder;
+
+function attachApplicantToVacancy(Applicant $applicant, Vacancy $vacancy, string $status = 'registered'): void
+{
+    $vacancy->applicants()->attach($applicant->id, ['status' => $status]);
+}
 
 function createAdmin(): User
 {

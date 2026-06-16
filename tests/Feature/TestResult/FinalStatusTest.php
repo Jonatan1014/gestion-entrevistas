@@ -8,11 +8,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-function attachApplicantToVacancy(Applicant $applicant, Vacancy $vacancy, string $status = 'registered'): void
-{
-    $vacancy->applicants()->attach($applicant->id, ['status' => $status]);
-}
-
 // ============================================================================
 // RES-006 — Human-Determined Final Status
 // ============================================================================

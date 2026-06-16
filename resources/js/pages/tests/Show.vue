@@ -38,9 +38,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const typeLabel = (type: string) => {
     return {
-        numeric: 'Numeric',
-        text: 'Text',
-        multiple_choice: 'Multiple Choice',
+        numeric: 'Numérica',
+        text: 'Texto',
+        multiple_choice: 'Opción múltiple',
     }[type] ?? type;
 };
 

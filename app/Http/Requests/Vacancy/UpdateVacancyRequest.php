@@ -27,6 +27,8 @@ class UpdateVacancyRequest extends FormRequest
             'location' => ['required', 'string', 'max:255'],
             'requirements' => ['required', 'string'],
             'min_grade' => ['nullable', 'numeric', 'min:0', 'max:999.99'],
+            'test_ids' => ['nullable', 'array'],
+            'test_ids.*' => ['exists:tests,id'],
         ];
     }
 }

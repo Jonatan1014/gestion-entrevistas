@@ -20,6 +20,7 @@ describe('INT-002: Interview Status Lifecycle', function () {
 
         $response = $this->actingAs($admin)->post("/interviews/{$interview->id}/complete", [
             'observations' => 'Strong technical profile',
+            'score' => 7,
         ]);
 
         $response->assertRedirect();
@@ -27,6 +28,7 @@ describe('INT-002: Interview Status Lifecycle', function () {
             'id' => $interview->id,
             'status' => InterviewStatus::COMPLETED->value,
             'observations' => 'Strong technical profile',
+            'score' => 7,
         ]);
         $this->assertNotNull($interview->fresh()->completed_at);
     });
@@ -71,6 +73,7 @@ describe('INT-002: Interview Status Lifecycle', function () {
 
         $response = $this->actingAs($admin)->post("/interviews/{$interview->id}/complete", [
             'observations' => 'Should not work',
+            'score' => 5,
         ]);
 
         $response->assertForbidden();

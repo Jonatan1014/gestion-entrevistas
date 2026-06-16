@@ -20,7 +20,12 @@ const variantClass = computed(() => {
 });
 
 const label = computed(() => {
-    return props.status.charAt(0).toUpperCase() + props.status.slice(1);
+    const labels: Record<string, string> = {
+        pending: 'Pendiente',
+        completed: 'Completada',
+        cancelled: 'Cancelada',
+    };
+    return labels[props.status] ?? props.status;
 });
 </script>
 

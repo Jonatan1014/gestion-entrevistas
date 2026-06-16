@@ -5,7 +5,7 @@ import ThemeToggle from '@/components/ThemeToggle.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BarChart, Briefcase, Calendar, ClipboardCheck, LayoutGrid, Shield, Users } from 'lucide-vue-next';
+import { BarChart, Briefcase, Calendar, ClipboardCheck, LayoutGrid, Shield, Target, Users } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 
@@ -28,44 +28,57 @@ const hasPermission = (permission?: string | string[]): boolean => {
 
 const mainNavItems: NavItemWithPermission[] = [
     {
-        title: 'Dashboard',
+        title: 'Inicio',
         href: '/dashboard',
         icon: LayoutGrid,
     },
     {
-        title: 'Vacancies',
+        title: 'Vacantes',
         href: '/vacancies',
         icon: Briefcase,
         permission: 'view-vacancies',
     },
     {
-        title: 'Applicants',
+        title: 'Postulantes',
         href: '/applicants',
         icon: Users,
         permission: 'view-applicants',
     },
     {
-        title: 'Tests',
+        title: 'Pruebas',
         href: '/tests',
         icon: ClipboardCheck,
         permission: ['view-tests', 'manage-tests'],
     },
     {
-        title: 'Interviews',
+        title: 'Entrevistas',
         href: '/interviews',
         icon: Calendar,
         permission: 'view-interviews',
     },
     {
-        title: 'Reports',
+        title: 'Reportes',
         href: '/reports',
         icon: BarChart,
         permission: 'view-reports',
     },
     {
+        title: 'Registrar puntaje',
+        href: '/quick-score',
+        icon: Target,
+        permission: 'record-results',
+        highlight: true,
+    },
+    {
         title: 'Roles',
         href: '/admin/roles',
         icon: Shield,
+        permission: 'manage-roles',
+    },
+    {
+        title: 'Usuarios',
+        href: '/admin/users',
+        icon: Users,
         permission: 'manage-roles',
     },
 ];

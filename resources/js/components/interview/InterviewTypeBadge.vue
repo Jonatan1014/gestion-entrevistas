@@ -18,7 +18,11 @@ const variantClass = computed(() => {
 });
 
 const label = computed(() => {
-    return props.type.charAt(0).toUpperCase() + props.type.slice(1);
+    const labels: Record<string, string> = {
+        virtual: 'Virtual',
+        presencial: 'Presencial',
+    };
+    return labels[props.type] ?? props.type;
 });
 </script>
 

@@ -1,0 +1,8 @@
+{
+    "User does not have the right permissions.": "No tenés los permisos necesarios para acceder.",
+    "User does not have the right roles.": "No tenés el rol necesario para acceder.",
+    "User does not have any of the necessary access rights.": "No tenés los permisos de acceso necesarios.",
+    "validation.after": "La fecha y hora deben ser posteriores al momento actual.",
+    "validation.date": "La fecha ingresada no es válida.",
+    "validation.required": "Este campo es obligatorio."
+}

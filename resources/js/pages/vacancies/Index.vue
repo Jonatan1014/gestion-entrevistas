@@ -28,37 +28,37 @@ defineProps<{
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Vacancies', href: '/vacancies' },
+    { title: 'Vacantes', href: '/vacancies' },
 ];
 </script>
 
 <template>
-    <Head title="Vacancies" />
+    <Head title="Vacantes" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-semibold">Vacancies</h1>
+                <h1 class="text-2xl font-semibold">Vacantes</h1>
                 <Link v-if="canCreateVacancies" :href="route('vacancies.create')">
-                    <Button>Create Vacancy</Button>
+                    <Button>Crear vacante</Button>
                 </Link>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>All Vacancies</CardTitle>
+                    <CardTitle>Todas las vacantes</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
                             <thead>
                                 <tr class="border-b">
-                                    <th class="px-4 py-3 font-medium">Position</th>
-                                    <th class="px-4 py-3 font-medium">Location</th>
-                                    <th class="px-4 py-3 font-medium">Status</th>
-                                    <th class="px-4 py-3 font-medium">Min Grade</th>
-                                    <th class="px-4 py-3 font-medium">Created By</th>
-                                    <th class="px-4 py-3 font-medium">Actions</th>
+                                    <th class="px-4 py-3 font-medium">Cargo</th>
+                                    <th class="px-4 py-3 font-medium">Ubicación</th>
+                                    <th class="px-4 py-3 font-medium">Estado</th>
+                                    <th class="px-4 py-3 font-medium">Nota mínima</th>
+                                    <th class="px-4 py-3 font-medium">Creada por</th>
+                                    <th class="px-4 py-3 font-medium">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -77,24 +77,24 @@ const breadcrumbs: BreadcrumbItem[] = [
                                     <td class="px-4 py-3">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger as-child>
-                                                <Button variant="outline" size="sm">Actions</Button>
+                                                <Button variant="outline" size="sm">Acciones</Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuItem as-child>
-                                                    <Link :href="route('vacancies.show', vacancy.id)" class="w-full">View</Link>
+                                                    <Link :href="route('vacancies.show', vacancy.id)" class="w-full">Ver</Link>
                                                 </DropdownMenuItem>
                                                 <template v-if="canEditVacancies">
                                                     <DropdownMenuItem as-child>
-                                                        <Link :href="route('vacancies.edit', vacancy.id)" class="w-full">Edit</Link>
+                                                        <Link :href="route('vacancies.edit', vacancy.id)" class="w-full">Editar</Link>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem v-if="vacancy.status === 'open'" as-child>
-                                                        <Link :href="route('vacancies.close', vacancy.id)" method="post" class="w-full">Close</Link>
+                                                        <Link :href="route('vacancies.close', vacancy.id)" method="post" class="w-full">Cerrar</Link>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem v-if="vacancy.status === 'open'" as-child>
-                                                        <Link :href="route('vacancies.cancel', vacancy.id)" method="post" class="w-full text-red-600">Cancel</Link>
+                                                        <Link :href="route('vacancies.cancel', vacancy.id)" method="post" class="w-full text-red-600">Cancelar</Link>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem v-if="vacancy.status === 'closed'" as-child>
-                                                        <Link :href="route('vacancies.reopen', vacancy.id)" method="post" class="w-full">Reopen</Link>
+                                                        <Link :href="route('vacancies.reopen', vacancy.id)" method="post" class="w-full">Reabrir</Link>
                                                     </DropdownMenuItem>
                                                 </template>
                                             </DropdownMenuContent>
@@ -103,7 +103,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 </tr>
                                 <tr v-if="vacancies.length === 0">
                                     <td colspan="6" class="px-4 py-8 text-center text-muted-foreground">
-                                        No vacancies found.
+                                        No hay vacantes registradas.
                                     </td>
                                 </tr>
                             </tbody>

@@ -59,7 +59,7 @@ class ApplicantDocumentController extends Controller
         ]);
 
         return redirect()->route('applicants.show', $applicant)
-            ->with('success', 'Document uploaded successfully.');
+            ->with('success', 'Documento subido correctamente.');
     }
 
     /**
@@ -75,6 +75,20 @@ class ApplicantDocumentController extends Controller
     }
 
     /**
+     * Preview the specified document inline in the browser.
+     */
+    public function preview(Applicant $applicant, ApplicantDocument $document)
+    {
+        if ($document->applicant_id !== $applicant->id) {
+            abort(404);
+        }
+
+        return Storage::disk('local')->response($document->path, $document->original_name, [
+            'Content-Disposition' => 'inline',
+        ]);
+    }
+
+    /**
      * Remove the specified document.
      */
     public function destroy(Applicant $applicant, ApplicantDocument $document): RedirectResponse
@@ -87,6 +101,6 @@ class ApplicantDocumentController extends Controller
         $document->delete();
 
         return redirect()->route('applicants.show', $applicant)
-            ->with('success', 'Document deleted successfully.');
+            ->with('success', 'Documento eliminado correctamente.');
     }
 }

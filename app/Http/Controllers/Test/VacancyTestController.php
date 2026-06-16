@@ -44,7 +44,7 @@ class VacancyTestController extends Controller
         ]);
 
         return redirect()->route('vacancies.tests.index', $vacancy)
-            ->with('success', 'Test attached successfully.');
+            ->with('success', 'Prueba asociada correctamente.');
     }
 
     /**
@@ -73,7 +73,7 @@ class VacancyTestController extends Controller
         ]);
 
         return redirect()->route('vacancies.tests.index', $vacancy)
-            ->with('success', 'Test weight updated successfully.');
+            ->with('success', 'Peso actualizado correctamente.');
     }
 
     /**
@@ -84,6 +84,6 @@ class VacancyTestController extends Controller
         $vacancy->tests()->detach($test->id);
 
         return redirect()->route('vacancies.tests.index', $vacancy)
-            ->with('success', 'Test detached successfully.');
+            ->with('success', 'Prueba desasociada correctamente.');
     }
 }

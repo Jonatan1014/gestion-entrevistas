@@ -54,7 +54,13 @@ class ApplicantController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('applicants/Create');
+        $vacancies = Vacancy::where('status', \App\Enums\VacancyStatus::OPEN)
+            ->orderBy('position')
+            ->get(['id', 'position']);
+
+        return Inertia::render('applicants/Create', [
+            'vacancies' => $vacancies,
+        ]);
     }
 
     /**
@@ -62,13 +68,26 @@ class ApplicantController extends Controller
      */
     public function store(StoreApplicantRequest $request): RedirectResponse
     {
+        $data = $request->validated();
+        $vacancyIds = $data['vacancy_ids'] ?? [];
+        unset($data['vacancy_ids']);
+
         $applicant = Applicant::create([
-            ...$request->validated(),
+            ...$data,
             'created_by' => $request->user()->id,
         ]);
 
+        // Associate with selected vacancies
+        if (! empty($vacancyIds)) {
+            $sync = [];
+            foreach ($vacancyIds as $id) {
+                $sync[$id] = ['status' => VacancyApplicantStatus::REGISTERED->value];
+            }
+            $applicant->vacancies()->sync($sync);
+        }
+
         return redirect()->route('applicants.show', $applicant)
-            ->with('success', 'Applicant created successfully.');
+            ->with('success', 'Postulante registrado correctamente.');
     }
 
     /**
@@ -106,7 +125,7 @@ class ApplicantController extends Controller
         $applicant->update($request->validated());
 
         return redirect()->route('applicants.show', $applicant)
-            ->with('success', 'Applicant updated successfully.');
+            ->with('success', 'Postulante actualizado correctamente.');
     }
 
     /**
@@ -117,7 +136,7 @@ class ApplicantController extends Controller
         $applicant->delete();
 
         return redirect()->route('applicants.index')
-            ->with('success', 'Applicant deleted successfully.');
+            ->with('success', 'Postulante eliminado correctamente.');
     }
 
     /**
@@ -133,7 +152,7 @@ class ApplicantController extends Controller
         ]);
 
         return redirect()->route('applicants.show', $applicant)
-            ->with('success', 'Applicant blocked successfully.');
+            ->with('success', 'Postulante bloqueado correctamente.');
     }
 
     /**
@@ -153,7 +172,7 @@ class ApplicantController extends Controller
         ]);
 
         return redirect()->route('applicants.show', $applicant)
-            ->with('success', 'Applicant unblocked successfully.');
+            ->with('success', 'Postulante desbloqueado correctamente.');
     }
 
     /**
@@ -167,7 +186,7 @@ class ApplicantController extends Controller
 
         if ($applicant->is_blocked) {
             return redirect()->back()
-                ->with('error', "Cannot assign blocked applicant: {$applicant->block_reason}");
+                ->with('error', "No se puede asignar un postulante bloqueado: {$applicant->block_reason}");
         }
 
         if ($applicant->vacancies()->where('vacancy_id', $vacancy->id)->exists()) {
@@ -182,7 +201,7 @@ class ApplicantController extends Controller
         ]);
 
         return redirect()->route('applicants.show', $applicant)
-            ->with('success', 'Applicant associated to vacancy successfully.');
+            ->with('success', 'Postulante asociado a la vacante correctamente.');
     }
 
     /**
@@ -203,7 +222,7 @@ class ApplicantController extends Controller
         ]);
 
         return redirect()->route('applicants.show', $applicant)
-            ->with('success', 'Vacancy status updated successfully.');
+            ->with('success', 'Estado de vacante actualizado correctamente.');
     }
 
     /**

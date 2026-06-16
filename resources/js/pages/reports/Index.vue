@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { FileText, Table } from 'lucide-vue-next';
 
 interface VacancyOption {
     id: number;
@@ -83,12 +84,23 @@ const props = defineProps<{
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Reports', href: '/reports' },
+    { title: 'Reportes', href: '/reports' },
 ];
 
 const formatDate = (value: string | null): string => {
-    if (! value) return '-';
-    return new Date(value).toLocaleString();
+    if (!value) return '-';
+    return new Date(value).toLocaleString('es-AR');
+};
+
+const statusLabel = (status: string): string => {
+    const labels: Record<string, string> = {
+        registered: 'Registrado',
+        in_interview: 'En entrevista',
+        evaluated: 'Evaluado',
+        apt: 'Apto',
+        no_apt: 'No apto',
+    };
+    return labels[status] ?? status;
 };
 
 const groupedComparison = computed(() => {
@@ -96,7 +108,7 @@ const groupedComparison = computed(() => {
     const grouped = new Map<number, ComparisonRow & { scores: { test_name: string; score: number | null; max_score: number | null; weight: number | null }[] }>();
 
     rows.forEach((row) => {
-        if (! grouped.has(row.applicant_id)) {
+        if (!grouped.has(row.applicant_id)) {
             grouped.set(row.applicant_id, {
                 ...row,
                 scores: [],
@@ -119,11 +131,11 @@ const groupedComparison = computed(() => {
 </script>
 
 <template>
-    <Head title="Reports" />
+    <Head title="Reportes" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-            <h1 class="text-2xl font-semibold">Reports</h1>
+            <h1 class="text-2xl font-semibold">Reportes</h1>
 
             <ReportFilters
                 :vacancies="vacancies"
@@ -136,7 +148,7 @@ const groupedComparison = computed(() => {
                 <TabsList class="grid w-full grid-cols-4 sm:w-fit">
                     <TabsTrigger value="comparison" as-child>
                         <Link :href="route('reports.comparison')" preserve-state preserve-scroll>
-                            Comparison
+                            Comparación
                         </Link>
                     </TabsTrigger>
                     <TabsTrigger value="pipeline" as-child>
@@ -146,27 +158,34 @@ const groupedComparison = computed(() => {
                     </TabsTrigger>
                     <TabsTrigger value="averages" as-child>
                         <Link :href="route('reports.averages')" preserve-state preserve-scroll>
-                            Averages
+                            Promedios
                         </Link>
                     </TabsTrigger>
                     <TabsTrigger value="interviews" as-child>
                         <Link :href="route('reports.interviews')" preserve-state preserve-scroll>
-                            Interviews
+                            Entrevistas
                         </Link>
                     </TabsTrigger>
                 </TabsList>
 
+                <!-- Comparison -->
                 <TabsContent value="comparison">
                     <Card>
                         <CardHeader class="flex flex-row items-center justify-between">
-                            <CardTitle>Candidate Comparison</CardTitle>
+                            <CardTitle>Comparación de candidatos</CardTitle>
                             <div class="flex gap-2">
-                                <Link :href="route('reports.comparison.pdf', filters)">
-                                    <Button variant="outline" size="sm">Export PDF</Button>
-                                </Link>
-                                <Link :href="route('reports.comparison.excel', filters)">
-                                    <Button variant="outline" size="sm">Export Excel</Button>
-                                </Link>
+                                <Button as-child variant="outline" size="sm">
+                                    <Link :href="route('reports.comparison.pdf', filters)">
+                                        <FileText class="mr-1 h-3.5 w-3.5" />
+                                        Exportar PDF
+                                    </Link>
+                                </Button>
+                                <Button as-child variant="outline" size="sm">
+                                    <Link :href="route('reports.comparison.excel', filters)">
+                                        <Table class="mr-1 h-3.5 w-3.5" />
+                                        Exportar Excel
+                                    </Link>
+                                </Button>
                             </div>
                         </CardHeader>
                         <CardContent>
@@ -174,33 +193,33 @@ const groupedComparison = computed(() => {
                                 <table class="w-full text-left text-sm">
                                     <thead>
                                         <tr class="border-b">
-                                            <th class="px-4 py-3 font-medium">Applicant</th>
-                                            <th class="px-4 py-3 font-medium">Vacancy</th>
-                                            <th class="px-4 py-3 font-medium">Test Scores</th>
-                                            <th class="px-4 py-3 font-medium">Weighted Avg</th>
-                                            <th class="px-4 py-3 font-medium">Status</th>
+                                            <th class="px-4 py-3 font-medium">Postulante</th>
+                                            <th class="px-4 py-3 font-medium">Vacante</th>
+                                            <th class="px-4 py-3 font-medium">Puntajes</th>
+                                            <th class="px-4 py-3 font-medium">Promedio</th>
+                                            <th class="px-4 py-3 font-medium">Estado</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="row in groupedComparison" :key="row.applicant_id" class="border-b hover:bg-muted/50">
-                                            <td class="px-4 py-3">{{ row.applicant_name }}</td>
-                                            <td class="px-4 py-3">{{ row.vacancy_position }}</td>
+                                            <td class="px-4 py-3 font-medium">{{ row.applicant_name }}</td>
+                                            <td class="px-4 py-3 text-muted-foreground">{{ row.vacancy_position }}</td>
                                             <td class="px-4 py-3">
                                                 <div v-if="row.scores.length" class="space-y-1">
                                                     <div v-for="score in row.scores" :key="score.test_name">
-                                                        {{ score.test_name }}: {{ score.score ?? 'N/A' }} / {{ score.max_score ?? '-' }} ({{ score.weight }}%)
+                                                        {{ score.test_name }}: {{ score.score ?? '-' }} / {{ score.max_score ?? '-' }} ({{ score.weight }}%)
                                                     </div>
                                                 </div>
-                                                <span v-else class="text-muted-foreground">N/A</span>
+                                                <span v-else class="text-muted-foreground">—</span>
                                             </td>
-                                            <td class="px-4 py-3">{{ row.weighted_avg ? row.weighted_avg.toFixed(2) : 'N/A' }}</td>
+                                            <td class="px-4 py-3">{{ row.weighted_avg ? row.weighted_avg.toFixed(2) : '—' }}</td>
                                             <td class="px-4 py-3">
-                                                <Badge variant="secondary">{{ row.status }}</Badge>
+                                                <Badge variant="secondary">{{ statusLabel(row.status) }}</Badge>
                                             </td>
                                         </tr>
                                         <tr v-if="groupedComparison.length === 0">
                                             <td colspan="5" class="px-4 py-8 text-center text-muted-foreground">
-                                                No applicants found.
+                                                No se encontraron postulantes.
                                             </td>
                                         </tr>
                                     </tbody>
@@ -210,17 +229,24 @@ const groupedComparison = computed(() => {
                     </Card>
                 </TabsContent>
 
+                <!-- Pipeline -->
                 <TabsContent value="pipeline">
                     <Card>
                         <CardHeader class="flex flex-row items-center justify-between">
-                            <CardTitle>Selection Pipeline</CardTitle>
+                            <CardTitle>Pipeline de selección</CardTitle>
                             <div class="flex gap-2">
-                                <Link :href="route('reports.pipeline.pdf', filters)">
-                                    <Button variant="outline" size="sm">Export PDF</Button>
-                                </Link>
-                                <Link :href="route('reports.pipeline.excel', filters)">
-                                    <Button variant="outline" size="sm">Export Excel</Button>
-                                </Link>
+                                <Button as-child variant="outline" size="sm">
+                                    <Link :href="route('reports.pipeline.pdf', filters)">
+                                        <FileText class="mr-1 h-3.5 w-3.5" />
+                                        Exportar PDF
+                                    </Link>
+                                </Button>
+                                <Button as-child variant="outline" size="sm">
+                                    <Link :href="route('reports.pipeline.excel', filters)">
+                                        <Table class="mr-1 h-3.5 w-3.5" />
+                                        Exportar Excel
+                                    </Link>
+                                </Button>
                             </div>
                         </CardHeader>
                         <CardContent>
@@ -228,22 +254,22 @@ const groupedComparison = computed(() => {
                                 <table class="w-full text-left text-sm">
                                     <thead>
                                         <tr class="border-b">
-                                            <th class="px-4 py-3 font-medium">Vacancy</th>
-                                            <th class="px-4 py-3 font-medium">Status</th>
-                                            <th class="px-4 py-3 font-medium">Applicants</th>
+                                            <th class="px-4 py-3 font-medium">Vacante</th>
+                                            <th class="px-4 py-3 font-medium">Estado</th>
+                                            <th class="px-4 py-3 font-medium">Postulantes</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="row in pipeline?.data" :key="`${row.vacancy_id}-${row.status}`" class="border-b hover:bg-muted/50">
                                             <td class="px-4 py-3">{{ row.vacancy_position }}</td>
                                             <td class="px-4 py-3">
-                                                <Badge variant="secondary">{{ row.status }}</Badge>
+                                                <Badge variant="secondary">{{ statusLabel(row.status) }}</Badge>
                                             </td>
                                             <td class="px-4 py-3">{{ row.count }}</td>
                                         </tr>
                                         <tr v-if="!pipeline?.data?.length">
                                             <td colspan="3" class="px-4 py-8 text-center text-muted-foreground">
-                                                No pipeline data found.
+                                                Sin datos de pipeline.
                                             </td>
                                         </tr>
                                     </tbody>
@@ -253,17 +279,24 @@ const groupedComparison = computed(() => {
                     </Card>
                 </TabsContent>
 
+                <!-- Averages -->
                 <TabsContent value="averages">
                     <Card>
                         <CardHeader class="flex flex-row items-center justify-between">
-                            <CardTitle>Score Averages</CardTitle>
+                            <CardTitle>Promedios por prueba</CardTitle>
                             <div class="flex gap-2">
-                                <Link :href="route('reports.averages.pdf', filters)">
-                                    <Button variant="outline" size="sm">Export PDF</Button>
-                                </Link>
-                                <Link :href="route('reports.averages.excel', filters)">
-                                    <Button variant="outline" size="sm">Export Excel</Button>
-                                </Link>
+                                <Button as-child variant="outline" size="sm">
+                                    <Link :href="route('reports.averages.pdf', filters)">
+                                        <FileText class="mr-1 h-3.5 w-3.5" />
+                                        Exportar PDF
+                                    </Link>
+                                </Button>
+                                <Button as-child variant="outline" size="sm">
+                                    <Link :href="route('reports.averages.excel', filters)">
+                                        <Table class="mr-1 h-3.5 w-3.5" />
+                                        Exportar Excel
+                                    </Link>
+                                </Button>
                             </div>
                         </CardHeader>
                         <CardContent>
@@ -271,22 +304,22 @@ const groupedComparison = computed(() => {
                                 <table class="w-full text-left text-sm">
                                     <thead>
                                         <tr class="border-b">
-                                            <th class="px-4 py-3 font-medium">Test</th>
-                                            <th class="px-4 py-3 font-medium">Vacancy</th>
-                                            <th class="px-4 py-3 font-medium">Average Score</th>
-                                            <th class="px-4 py-3 font-medium">Scored Applicants</th>
+                                            <th class="px-4 py-3 font-medium">Prueba</th>
+                                            <th class="px-4 py-3 font-medium">Vacante</th>
+                                            <th class="px-4 py-3 font-medium">Promedio</th>
+                                            <th class="px-4 py-3 font-medium">Evaluados</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="row in averages?.data" :key="`${row.test_id}-${row.vacancy_id}`" class="border-b hover:bg-muted/50">
                                             <td class="px-4 py-3">{{ row.test_name }}</td>
-                                            <td class="px-4 py-3">{{ row.vacancy_position }}</td>
+                                            <td class="px-4 py-3 text-muted-foreground">{{ row.vacancy_position }}</td>
                                             <td class="px-4 py-3">{{ row.avg_score.toFixed(2) }}</td>
                                             <td class="px-4 py-3">{{ row.scored_count }}</td>
                                         </tr>
                                         <tr v-if="!averages?.data?.length">
                                             <td colspan="4" class="px-4 py-8 text-center text-muted-foreground">
-                                                No average data found.
+                                                Sin datos de promedios.
                                             </td>
                                         </tr>
                                     </tbody>
@@ -296,17 +329,24 @@ const groupedComparison = computed(() => {
                     </Card>
                 </TabsContent>
 
+                <!-- Interviews -->
                 <TabsContent value="interviews">
                     <Card>
                         <CardHeader class="flex flex-row items-center justify-between">
-                            <CardTitle>Completed Interviews</CardTitle>
+                            <CardTitle>Entrevistas completadas</CardTitle>
                             <div class="flex gap-2">
-                                <Link :href="route('reports.interviews.pdf', filters)">
-                                    <Button variant="outline" size="sm">Export PDF</Button>
-                                </Link>
-                                <Link :href="route('reports.interviews.excel', filters)">
-                                    <Button variant="outline" size="sm">Export Excel</Button>
-                                </Link>
+                                <Button as-child variant="outline" size="sm">
+                                    <Link :href="route('reports.interviews.pdf', filters)">
+                                        <FileText class="mr-1 h-3.5 w-3.5" />
+                                        Exportar PDF
+                                    </Link>
+                                </Button>
+                                <Button as-child variant="outline" size="sm">
+                                    <Link :href="route('reports.interviews.excel', filters)">
+                                        <Table class="mr-1 h-3.5 w-3.5" />
+                                        Exportar Excel
+                                    </Link>
+                                </Button>
                             </div>
                         </CardHeader>
                         <CardContent>
@@ -314,24 +354,24 @@ const groupedComparison = computed(() => {
                                 <table class="w-full text-left text-sm">
                                     <thead>
                                         <tr class="border-b">
-                                            <th class="px-4 py-3 font-medium">Date</th>
-                                            <th class="px-4 py-3 font-medium">Applicant</th>
-                                            <th class="px-4 py-3 font-medium">Interviewer</th>
-                                            <th class="px-4 py-3 font-medium">Vacancy</th>
-                                            <th class="px-4 py-3 font-medium">Observations</th>
+                                            <th class="px-4 py-3 font-medium">Fecha</th>
+                                            <th class="px-4 py-3 font-medium">Postulante</th>
+                                            <th class="px-4 py-3 font-medium">Entrevistador</th>
+                                            <th class="px-4 py-3 font-medium">Vacante</th>
+                                            <th class="px-4 py-3 font-medium">Observaciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="row in interviews?.data" :key="row.id" class="border-b hover:bg-muted/50">
                                             <td class="px-4 py-3">{{ formatDate(row.scheduled_at) }}</td>
-                                            <td class="px-4 py-3">{{ row.applicant_name }}</td>
-                                            <td class="px-4 py-3">{{ row.interviewer_name }}</td>
-                                            <td class="px-4 py-3">{{ row.vacancy_position }}</td>
-                                            <td class="px-4 py-3">{{ row.observations ?? '-' }}</td>
+                                            <td class="px-4 py-3 font-medium">{{ row.applicant_name }}</td>
+                                            <td class="px-4 py-3 text-muted-foreground">{{ row.interviewer_name }}</td>
+                                            <td class="px-4 py-3 text-muted-foreground">{{ row.vacancy_position }}</td>
+                                            <td class="px-4 py-3">{{ row.observations ?? '—' }}</td>
                                         </tr>
                                         <tr v-if="!interviews?.data?.length">
                                             <td colspan="5" class="px-4 py-8 text-center text-muted-foreground">
-                                                No completed interviews found.
+                                                No hay entrevistas completadas.
                                             </td>
                                         </tr>
                                     </tbody>

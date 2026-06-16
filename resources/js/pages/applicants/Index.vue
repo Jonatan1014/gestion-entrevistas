@@ -38,7 +38,7 @@ const props = defineProps<{
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Applicants', href: '/applicants' },
+    { title: 'Postulantes', href: '/applicants' },
 ];
 
 const updateFilters = () => {
@@ -53,30 +53,30 @@ const updateFilters = () => {
 </script>
 
 <template>
-    <Head title="Applicants" />
+    <Head title="Postulantes" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-semibold">Applicants</h1>
-                <Link v-if="canCreateApplicants" :href="route('applicants.create')">
-                    <Button>Register Applicant</Button>
-                </Link>
+                <h1 class="text-2xl font-semibold">Postulantes</h1>
+                <Button v-if="canCreateApplicants" as-child>
+                    <Link :href="route('applicants.create')">Registrar postulante</Link>
+                </Button>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Filter Applicants</CardTitle>
+                    <CardTitle>Filtrar postulantes</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div class="flex flex-col gap-4 sm:flex-row sm:items-end">
                         <div class="flex-1">
-                            <Label for="search">Search by name or email</Label>
+                            <Label for="search">Buscar por nombre o email</Label>
                             <Input
                                 id="search"
                                 v-model="filters.search"
                                 type="text"
-                                placeholder="Search..."
+                                placeholder="Buscar…"
                                 @input="updateFilters"
                             />
                         </div>
@@ -86,7 +86,7 @@ const updateFilters = () => {
                                 :checked="filters.assigned_to_me"
                                 @update:checked="filters.assigned_to_me = $event; updateFilters()"
                             />
-                            <Label for="assigned_to_me" class="cursor-pointer">Assigned to me</Label>
+                            <Label for="assigned_to_me" class="cursor-pointer">Asignados a mí</Label>
                         </div>
                     </div>
                 </CardContent>
@@ -94,19 +94,19 @@ const updateFilters = () => {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>All Applicants</CardTitle>
+                    <CardTitle>Todos los postulantes</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
                             <thead>
                                 <tr class="border-b">
-                                    <th class="px-4 py-3 font-medium">Name</th>
+                                    <th class="px-4 py-3 font-medium">Nombre</th>
                                     <th class="px-4 py-3 font-medium">Email</th>
-                                    <th class="px-4 py-3 font-medium">Phone</th>
-                                    <th class="px-4 py-3 font-medium">Status</th>
-                                    <th class="px-4 py-3 font-medium">Created By</th>
-                                    <th class="px-4 py-3 font-medium">Actions</th>
+                                    <th class="px-4 py-3 font-medium">Teléfono</th>
+                                    <th class="px-4 py-3 font-medium">Estado</th>
+                                    <th class="px-4 py-3 font-medium">Registrado por</th>
+                                    <th class="px-4 py-3 font-medium">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -120,25 +120,25 @@ const updateFilters = () => {
                                     <td class="px-4 py-3">{{ applicant.phone }}</td>
                                     <td class="px-4 py-3">
                                         <span v-if="applicant.is_blocked" class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900 dark:text-red-300">
-                                            Blocked
+                                            Bloqueado
                                         </span>
                                         <span v-else class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-300">
-                                            Active
+                                            Activo
                                         </span>
                                     </td>
                                     <td class="px-4 py-3">{{ applicant.created_by.name }}</td>
                                     <td class="px-4 py-3">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger as-child>
-                                                <Button variant="outline" size="sm">Actions</Button>
+                                                <Button variant="outline" size="sm">Acciones</Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuItem as-child>
-                                                    <Link :href="route('applicants.show', applicant.id)" class="w-full">View</Link>
+                                                    <Link :href="route('applicants.show', applicant.id)" class="w-full">Ver</Link>
                                                 </DropdownMenuItem>
                                                 <template v-if="canEditApplicants">
                                                     <DropdownMenuItem as-child>
-                                                        <Link :href="route('applicants.edit', applicant.id)" class="w-full">Edit</Link>
+                                                        <Link :href="route('applicants.edit', applicant.id)" class="w-full">Editar</Link>
                                                     </DropdownMenuItem>
                                                 </template>
                                             </DropdownMenuContent>
@@ -147,7 +147,7 @@ const updateFilters = () => {
                                 </tr>
                                 <tr v-if="applicants.data.length === 0">
                                     <td colspan="6" class="px-4 py-8 text-center text-muted-foreground">
-                                        No applicants found.
+                                        No hay postulantes registrados.
                                     </td>
                                 </tr>
                             </tbody>

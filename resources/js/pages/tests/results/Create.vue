@@ -54,7 +54,7 @@ const props = defineProps<{
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Tests', href: '/tests' },
     { title: props.test.name, href: `/tests/${props.test.id}` },
-    { title: 'Record Result', href: '#' },
+    { title: 'Registrar resultado', href: '#' },
 ];
 
 const initialAnswers = props.existingResult
@@ -76,21 +76,21 @@ const submit = () => {
 
 const typeLabel = (type: string) => {
     return {
-        numeric: 'Numeric',
-        text: 'Text',
-        multiple_choice: 'Multiple Choice',
+        numeric: 'Numérica',
+        text: 'Texto',
+        multiple_choice: 'Opción múltiple',
     }[type] ?? type;
 };
 </script>
 
 <template>
-    <Head :title="`Record Result - ${test.name}`" />
+    <Head :title="`Registrar resultado — ${test.name}`" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-semibold">Record Result</h1>
+                    <h1 class="text-2xl font-semibold">Registrar resultado</h1>
                     <p class="text-sm text-muted-foreground">
                         {{ applicant.name }} · {{ vacancy.position }} · {{ typeLabel(test.type) }}
                     </p>

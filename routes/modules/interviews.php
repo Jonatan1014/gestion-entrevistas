@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth', 'verified', 'permission:view-interviews'])->group(function () {
+    // Calendar — MUST be registered BEFORE resource to avoid {interview} wildcard match
+    Route::get('interviews/calendar', [InterviewController::class, 'calendar'])->name('interviews.calendar');
+
     Route::resource('interviews', InterviewController::class)->except(['edit', 'update']);
 
     Route::post('interviews/{interview}/complete', [InterviewController::class, 'complete'])

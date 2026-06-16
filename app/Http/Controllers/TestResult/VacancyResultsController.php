@@ -21,12 +21,27 @@ class VacancyResultsController extends Controller
         $vacancy->load(['tests', 'applicants']);
 
         $applicants = $vacancy->applicants->map(function (Applicant $applicant) use ($vacancy) {
-            $results = $applicant->testResults()
+            $allResults = $applicant->testResults()
                 ->where('vacancy_id', $vacancy->id)
                 ->with('test')
+                ->orderBy('created_at', 'desc')
                 ->get();
 
-            $testData = $results->map(function ($result) {
+            // Group results by test_id, preserving all attempts
+            $resultsByTest = $allResults->groupBy('test_id')->map(function ($attempts) {
+                return $attempts->map(fn ($r) => [
+                    'id' => $r->id,
+                    'score' => (float) $r->score,
+                    'observations' => $r->observations,
+                    'created_at' => $r->created_at->format('d/m/Y H:i'),
+                    'is_manual_override' => $r->is_manual_override,
+                ])->values();
+            });
+
+            // Use only the latest result per test for the weighted average
+            $latestResults = $allResults->unique('test_id');
+
+            $testData = $latestResults->map(function ($result) {
                 return [
                     'score' => (float) $result->score,
                     'max_score' => (float) $result->test->max_score,
@@ -34,7 +49,7 @@ class VacancyResultsController extends Controller
                 ];
             });
 
-            $weights = $results->map(function ($result) use ($vacancy) {
+            $weights = $latestResults->map(function ($result) use ($vacancy) {
                 $pivot = $vacancy->tests->firstWhere('id', $result->test_id);
 
                 return (float) ($pivot?->pivot?->weight ?? 0);
@@ -51,7 +66,7 @@ class VacancyResultsController extends Controller
                 'name' => $applicant->name,
                 'email' => $applicant->email,
                 'status' => $applicant->pivot->status,
-                'results' => $results,
+                'results_by_test' => $resultsByTest,
                 'weighted_average' => $weightedAverage,
             ];
         });
@@ -78,6 +93,6 @@ class VacancyResultsController extends Controller
         ]);
 
         return redirect()->route('vacancies.results.index', $vacancy)
-            ->with('success', 'Final status updated successfully.');
+            ->with('success', 'Estado final actualizado correctamente.');
     }
 }

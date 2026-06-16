@@ -8,6 +8,7 @@ interface NavItem {
     title: string;
     href: string;
     icon: Component;
+    highlight?: boolean;
 }
 
 defineProps<{
@@ -19,10 +20,10 @@ const page = usePage<SharedData>();
 
 <template>
     <SidebarGroup class="px-2 py-0">
-        <SidebarGroupLabel>Platform</SidebarGroupLabel>
+        <SidebarGroupLabel>Plataforma</SidebarGroupLabel>
         <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
-                <SidebarMenuButton as-child :is-active="item.href === page.url">
+                <SidebarMenuButton as-child :is-active="item.href === page.url" :class="{ 'text-[#51eead] hover:text-[#51eead]': item.highlight }">
                     <Link :href="item.href">
                         <component :is="item.icon" />
                         <span>{{ item.title }}</span>

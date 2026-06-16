@@ -8,11 +8,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-function attachApplicantToVacancy(Applicant $applicant, Vacancy $vacancy): void
-{
-    $vacancy->applicants()->attach($applicant->id, ['status' => 'registered']);
-}
-
 // ============================================================================
 // RES-005 — Minimum Grade Comparison
 // ============================================================================

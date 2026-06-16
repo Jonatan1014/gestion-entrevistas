@@ -25,13 +25,12 @@ const variantClass = computed(() => {
 
 const label = computed(() => {
     const labels: Record<string, string> = {
-        registered: 'Registered',
-        in_interview: 'In Interview',
-        evaluated: 'Evaluated',
-        apt: 'Apt',
-        no_apt: 'No Apt',
+        registered: 'Registrado',
+        in_interview: 'En entrevista',
+        evaluated: 'Evaluado',
+        apt: 'Apto',
+        no_apt: 'No apto',
     };
-
     return labels[props.status] ?? props.status;
 });
 </script>

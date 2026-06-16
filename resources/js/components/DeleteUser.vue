@@ -2,7 +2,6 @@
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-// Components
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -44,39 +43,45 @@ const closeModal = () => {
 
 <template>
     <div class="space-y-6">
-        <HeadingSmall title="Delete account" description="Delete your account and all of its resources" />
+        <HeadingSmall title="Eliminar cuenta" description="Eliminá tu cuenta y todos sus datos de forma permanente" />
         <div class="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
             <div class="relative space-y-0.5 text-red-600 dark:text-red-100">
-                <p class="font-medium">Warning</p>
-                <p class="text-sm">Please proceed with caution, this cannot be undone.</p>
+                <p class="font-medium">Advertencia</p>
+                <p class="text-sm">Esta acción no se puede deshacer. Todos tus datos se eliminarán permanentemente.</p>
             </div>
             <Dialog>
                 <DialogTrigger as-child>
-                    <Button variant="destructive">Delete account</Button>
+                    <Button variant="destructive">Eliminar cuenta</Button>
                 </DialogTrigger>
                 <DialogContent>
-                    <form class="space-y-6" @submit="deleteUser">
+                    <form class="space-y-6" @submit="deleteUser" novalidate>
                         <DialogHeader class="space-y-3">
-                            <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
+                            <DialogTitle>¿Estás seguro de que querés eliminar tu cuenta?</DialogTitle>
                             <DialogDescription>
-                                Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your
-                                password to confirm you would like to permanently delete your account.
+                                Una vez eliminada, todos los datos asociados a tu cuenta se perderán permanentemente. Ingresá tu contraseña para confirmar.
                             </DialogDescription>
                         </DialogHeader>
 
                         <div class="grid gap-2">
-                            <Label for="password" class="sr-only">Password</Label>
-                            <Input id="password" type="password" name="password" ref="passwordInput" v-model="form.password" placeholder="Password" />
+                            <Label for="password" class="sr-only">Contraseña</Label>
+                            <Input
+                                id="password"
+                                type="password"
+                                ref="passwordInput"
+                                v-model="form.password"
+                                placeholder="Contraseña"
+                                required
+                            />
                             <InputError :message="form.errors.password" />
                         </div>
 
                         <DialogFooter>
                             <DialogClose as-child>
-                                <Button variant="secondary" @click="closeModal"> Cancel </Button>
+                                <Button variant="secondary" @click="closeModal">Cancelar</Button>
                             </DialogClose>
 
-                            <Button variant="destructive" :disabled="form.processing">
-                                <button type="submit">Delete account</button>
+                            <Button variant="destructive" type="submit" :disabled="form.processing">
+                                Eliminar cuenta
                             </Button>
                         </DialogFooter>
                     </form>

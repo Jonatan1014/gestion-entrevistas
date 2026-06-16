@@ -24,6 +24,7 @@ class CompleteInterviewRequest extends FormRequest
     {
         return [
             'observations' => ['required', 'string', 'max:2000'],
+            'score' => ['required', 'integer', 'min:1', 'max:10'],
         ];
     }
 }

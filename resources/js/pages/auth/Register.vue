@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
+import { LoaderCircle, UserPlus } from 'lucide-vue-next';
 
 const form = useForm({
     name: '',
@@ -23,60 +23,81 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthBase title="Create an account" description="Enter your details below to create your account">
-        <Head title="Register" />
+    <AuthBase title="Crear cuenta" description="Completá tus datos para registrarte en el sistema">
+        <Head title="Registrarse" />
 
-        <form @submit.prevent="submit" class="flex flex-col gap-6">
-            <div class="grid gap-6">
+        <form @submit.prevent="submit" class="flex flex-col gap-6" novalidate>
+            <div class="grid gap-5">
                 <div class="grid gap-2">
-                    <Label for="name">Name</Label>
-                    <Input id="name" type="text" required autofocus tabindex="1" autocomplete="name" v-model="form.name" placeholder="Full name" />
-                    <InputError :message="form.errors.name" />
+                    <Label for="name">Nombre completo</Label>
+                    <Input
+                        id="name"
+                        type="text"
+                        required
+                        autofocus
+                        autocomplete="name"
+                        v-model="form.name"
+                        placeholder="Tu nombre"
+                        :aria-invalid="!!form.errors.name"
+                        :aria-describedby="form.errors.name ? 'name-error' : undefined"
+                    />
+                    <InputError id="name-error" :message="form.errors.name" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
-                    <Input id="email" type="email" required tabindex="2" autocomplete="email" v-model="form.email" placeholder="email@example.com" />
-                    <InputError :message="form.errors.email" />
+                    <Label for="email">Email</Label>
+                    <Input
+                        id="email"
+                        type="email"
+                        required
+                        autocomplete="email"
+                        v-model="form.email"
+                        placeholder="email@ejemplo.com"
+                        :aria-invalid="!!form.errors.email"
+                        :aria-describedby="form.errors.email ? 'email-error' : undefined"
+                    />
+                    <InputError id="email-error" :message="form.errors.email" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Password</Label>
+                    <Label for="password">Contraseña</Label>
                     <Input
                         id="password"
                         type="password"
                         required
-                        tabindex="3"
                         autocomplete="new-password"
                         v-model="form.password"
-                        placeholder="Password"
+                        placeholder="Mínimo 8 caracteres"
+                        :aria-invalid="!!form.errors.password"
+                        :aria-describedby="form.errors.password ? 'password-error' : undefined"
                     />
-                    <InputError :message="form.errors.password" />
+                    <InputError id="password-error" :message="form.errors.password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirm password</Label>
+                    <Label for="password_confirmation">Confirmar contraseña</Label>
                     <Input
                         id="password_confirmation"
                         type="password"
                         required
-                        tabindex="4"
                         autocomplete="new-password"
                         v-model="form.password_confirmation"
-                        placeholder="Confirm password"
+                        placeholder="Repetí tu contraseña"
+                        :aria-invalid="!!form.errors.password_confirmation"
                     />
                     <InputError :message="form.errors.password_confirmation" />
                 </div>
 
-                <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="form.processing">
-                    <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    Create account
+                <Button type="submit" class="w-full" :disabled="form.processing" size="lg">
+                    <LoaderCircle v-if="form.processing" class="mr-2 h-4 w-4 animate-spin" />
+                    <UserPlus v-else class="mr-2 h-4 w-4" />
+                    {{ form.processing ? 'Creando cuenta…' : 'Crear cuenta' }}
                 </Button>
             </div>
 
             <div class="text-center text-sm text-muted-foreground">
-                Already have an account?
-                <TextLink :href="route('login')" class="underline underline-offset-4" tabindex="6">Log in</TextLink>
+                ¿Ya tenés cuenta?
+                <TextLink :href="route('login')" class="font-medium">Ingresar</TextLink>
             </div>
         </form>
     </AuthBase>

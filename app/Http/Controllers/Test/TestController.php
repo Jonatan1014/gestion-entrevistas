@@ -47,7 +47,7 @@ class TestController extends Controller
         }
 
         return redirect()->route('tests.show', $test)
-            ->with('success', 'Test created successfully.');
+            ->with('success', 'Prueba creada correctamente.');
     }
 
     /**
@@ -88,7 +88,7 @@ class TestController extends Controller
         }
 
         return redirect()->route('tests.show', $test)
-            ->with('success', 'Test updated successfully.');
+            ->with('success', 'Prueba actualizada correctamente.');
     }
 
     /**
@@ -100,7 +100,7 @@ class TestController extends Controller
         $test->delete();
 
         return redirect()->route('tests.index')
-            ->with('success', 'Test deleted successfully.');
+            ->with('success', 'Prueba eliminada correctamente.');
     }
 
     /**

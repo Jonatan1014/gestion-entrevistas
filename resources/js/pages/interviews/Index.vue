@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
     Select,
     SelectContent,
@@ -24,6 +25,7 @@ import {
 import InterviewStatusBadge from '@/components/interview/InterviewStatusBadge.vue';
 import InterviewTypeBadge from '@/components/interview/InterviewTypeBadge.vue';
 import InputError from '@/components/InputError.vue';
+import { CheckCircle, XCircle, Eye } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 interface Interviewer {
@@ -62,8 +64,18 @@ const props = defineProps<{
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Interviews', href: '/interviews' },
+    { title: 'Entrevistas', href: '/interviews' },
 ];
+
+const formatDateTime = (date: string) => {
+    return new Date(date).toLocaleString('es-AR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+};
 
 const updateFilters = () => {
     router.get('/interviews', {
@@ -82,6 +94,7 @@ const cancelDialogOpen = ref(false);
 
 const completeForm = useForm({
     observations: '',
+    score: '' as number | string,
 });
 
 const cancelForm = useForm({
@@ -91,6 +104,7 @@ const cancelForm = useForm({
 const openCompleteDialog = (interview: Interview) => {
     selectedInterview.value = interview;
     completeForm.observations = '';
+    completeForm.score = '';
     completeDialogOpen.value = true;
 };
 
@@ -102,7 +116,6 @@ const openCancelDialog = (interview: Interview) => {
 
 const submitComplete = () => {
     if (!selectedInterview.value) return;
-
     completeForm.post(route('interviews.complete', selectedInterview.value.id), {
         onSuccess: () => {
             completeDialogOpen.value = false;
@@ -113,7 +126,6 @@ const submitComplete = () => {
 
 const submitCancel = () => {
     if (!selectedInterview.value) return;
-
     cancelForm.post(route('interviews.cancel', selectedInterview.value.id), {
         onSuccess: () => {
             cancelDialogOpen.value = false;
@@ -124,60 +136,65 @@ const submitCancel = () => {
 </script>
 
 <template>
-    <Head title="Interviews" />
+    <Head title="Entrevistas" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-semibold">Interviews</h1>
-                <Link :href="route('interviews.create')">
-                    <Button>Schedule Interview</Button>
-                </Link>
+                <h1 class="text-2xl font-semibold">Entrevistas</h1>
+                <div class="flex items-center gap-2">
+                    <Button as-child variant="outline">
+                        <Link :href="route('interviews.calendar')">Calendario</Link>
+                    </Button>
+                    <Button as-child>
+                        <Link :href="route('interviews.create')">Programar entrevista</Link>
+                    </Button>
+                </div>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Filter Interviews</CardTitle>
+                    <CardTitle>Filtrar entrevistas</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div class="grid gap-4 sm:grid-cols-3">
                         <div class="grid gap-2">
-                            <Label for="interviewer_id">Interviewer</Label>
+                            <Label for="interviewer_id">Entrevistador</Label>
                             <Select v-model="filters.interviewer_id" @update:model-value="updateFilters">
                                 <SelectTrigger id="interviewer_id">
-                                    <SelectValue placeholder="All interviewers" />
+                                    <SelectValue placeholder="Todos" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="">All interviewers</SelectItem>
-                                    <SelectItem v-for="interviewer in interviewers" :key="interviewer.id" :value="String(interviewer.id)">
-                                        {{ interviewer.name }}
+                                    <SelectItem value="">Todos</SelectItem>
+                                    <SelectItem v-for="i in interviewers" :key="i.id" :value="String(i.id)">
+                                        {{ i.name }}
                                     </SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <div class="grid gap-2">
-                            <Label for="vacancy_id">Vacancy</Label>
+                            <Label for="vacancy_id">Vacante</Label>
                             <Select v-model="filters.vacancy_id" @update:model-value="updateFilters">
                                 <SelectTrigger id="vacancy_id">
-                                    <SelectValue placeholder="All vacancies" />
+                                    <SelectValue placeholder="Todas" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="">All vacancies</SelectItem>
-                                    <SelectItem v-for="vacancy in vacancies" :key="vacancy.id" :value="String(vacancy.id)">
-                                        {{ vacancy.position }}
+                                    <SelectItem value="">Todas</SelectItem>
+                                    <SelectItem v-for="v in vacancies" :key="v.id" :value="String(v.id)">
+                                        {{ v.position }}
                                     </SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <div class="grid gap-2">
-                            <Label for="applicant_name">Applicant</Label>
+                            <Label for="applicant_name">Postulante</Label>
                             <Input
                                 id="applicant_name"
                                 v-model="filters.applicant_name"
                                 type="text"
-                                placeholder="Search by applicant name..."
+                                placeholder="Buscar por nombre…"
                                 @input="updateFilters"
                             />
                         </div>
@@ -187,32 +204,32 @@ const submitCancel = () => {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>All Interviews</CardTitle>
+                    <CardTitle>Todas las entrevistas</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
                             <thead>
                                 <tr class="border-b">
-                                    <th class="px-4 py-3 font-medium">Applicant</th>
-                                    <th class="px-4 py-3 font-medium">Vacancy</th>
-                                    <th class="px-4 py-3 font-medium">Interviewer</th>
-                                    <th class="px-4 py-3 font-medium">Scheduled At</th>
-                                    <th class="px-4 py-3 font-medium">Type</th>
-                                    <th class="px-4 py-3 font-medium">Status</th>
-                                    <th class="px-4 py-3 font-medium">Actions</th>
+                                    <th class="px-4 py-3 font-medium">Postulante</th>
+                                    <th class="px-4 py-3 font-medium">Vacante</th>
+                                    <th class="px-4 py-3 font-medium">Entrevistador</th>
+                                    <th class="px-4 py-3 font-medium">Programada</th>
+                                    <th class="px-4 py-3 font-medium">Tipo</th>
+                                    <th class="px-4 py-3 font-medium">Estado</th>
+                                    <th class="px-4 py-3 font-medium">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="interview in interviews.data" :key="interview.id" class="border-b hover:bg-muted/50">
                                     <td class="px-4 py-3">
-                                        <Link :href="route('interviews.show', interview.id)" class="text-primary hover:underline">
+                                        <Link :href="route('interviews.show', interview.id)" class="text-primary hover:underline font-medium">
                                             {{ interview.applicant.name }}
                                         </Link>
                                     </td>
-                                    <td class="px-4 py-3">{{ interview.vacancy.position }}</td>
-                                    <td class="px-4 py-3">{{ interview.interviewer.name }}</td>
-                                    <td class="px-4 py-3">{{ interview.scheduled_at }}</td>
+                                    <td class="px-4 py-3 text-muted-foreground">{{ interview.vacancy.position }}</td>
+                                    <td class="px-4 py-3 text-muted-foreground">{{ interview.interviewer.name }}</td>
+                                    <td class="px-4 py-3 text-muted-foreground">{{ formatDateTime(interview.scheduled_at) }}</td>
                                     <td class="px-4 py-3">
                                         <InterviewTypeBadge :type="interview.type" />
                                     </td>
@@ -221,19 +238,28 @@ const submitCancel = () => {
                                     </td>
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-2">
-                                            <Link :href="route('interviews.show', interview.id)">
-                                                <Button variant="outline" size="sm">View</Button>
-                                            </Link>
+                                            <Button as-child variant="outline" size="sm">
+                                                <Link :href="route('interviews.show', interview.id)">
+                                                    <Eye class="mr-1 h-3.5 w-3.5" />
+                                                    Ver
+                                                </Link>
+                                            </Button>
                                             <template v-if="canManageInterviews && interview.status === 'pending'">
-                                                <Button variant="outline" size="sm" @click="openCompleteDialog(interview)">Complete</Button>
-                                                <Button variant="destructive" size="sm" @click="openCancelDialog(interview)">Cancel</Button>
+                                                <Button variant="outline" size="sm" @click="openCompleteDialog(interview)">
+                                                    <CheckCircle class="mr-1 h-3.5 w-3.5" />
+                                                    Completar
+                                                </Button>
+                                                <Button variant="destructive" size="sm" @click="openCancelDialog(interview)">
+                                                    <XCircle class="mr-1 h-3.5 w-3.5" />
+                                                    Cancelar
+                                                </Button>
                                             </template>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr v-if="interviews.data.length === 0">
                                     <td colspan="7" class="px-4 py-8 text-center text-muted-foreground">
-                                        No interviews found.
+                                        No hay entrevistas registradas.
                                     </td>
                                 </tr>
                             </tbody>
@@ -258,61 +284,78 @@ const submitCancel = () => {
                 </CardContent>
             </Card>
 
+            <!-- Complete Dialog -->
             <Dialog v-model:open="completeDialogOpen">
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Complete Interview</DialogTitle>
+                        <DialogTitle>Completar entrevista</DialogTitle>
                         <DialogDescription>
-                            Record observations for the interview with {{ selectedInterview?.applicant.name }}.
+                            Registrá las observaciones de la entrevista con {{ selectedInterview?.applicant.name }}.
                         </DialogDescription>
                     </DialogHeader>
 
-                    <form @submit.prevent="submitComplete" class="space-y-4">
+                    <form @submit.prevent="submitComplete" class="space-y-4" novalidate>
                         <div class="grid gap-2">
-                            <Label for="observations">Observations</Label>
-                            <textarea
+                            <Label for="score">Nota de entrevista (1-10)</Label>
+                            <Input
+                                id="score"
+                                v-model="completeForm.score"
+                                type="number"
+                                min="1"
+                                max="10"
+                                placeholder="1-10"
+                                required
+                                class="w-24 text-center text-lg font-semibold"
+                            />
+                            <InputError :message="completeForm.errors.score" />
+                        </div>
+
+                        <div class="grid gap-2">
+                            <Label for="observations">Observaciones</Label>
+                            <Textarea
                                 id="observations"
                                 v-model="completeForm.observations"
-                                class="min-h-[100px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                                placeholder="Enter detailed observations..."
+                                rows="4"
+                                placeholder="Registrá observaciones detalladas…"
                                 required
                             />
                             <InputError :message="completeForm.errors.observations" />
                         </div>
 
                         <DialogFooter>
-                            <Button type="button" variant="outline" @click="completeDialogOpen = false">Cancel</Button>
-                            <Button type="submit" :disabled="completeForm.processing">Complete</Button>
+                            <Button type="button" variant="outline" @click="completeDialogOpen = false">Cancelar</Button>
+                            <Button type="submit" :disabled="completeForm.processing">Completar</Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>
             </Dialog>
 
+            <!-- Cancel Dialog -->
             <Dialog v-model:open="cancelDialogOpen">
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Cancel Interview</DialogTitle>
+                        <DialogTitle>Cancelar entrevista</DialogTitle>
                         <DialogDescription>
-                            Provide a cancellation reason for the interview with {{ selectedInterview?.applicant.name }}.
+                            Indicá el motivo de cancelación para la entrevista con {{ selectedInterview?.applicant.name }}.
                         </DialogDescription>
                     </DialogHeader>
 
-                    <form @submit.prevent="submitCancel" class="space-y-4">
+                    <form @submit.prevent="submitCancel" class="space-y-4" novalidate>
                         <div class="grid gap-2">
-                            <Label for="cancellation_reason">Cancellation Reason</Label>
-                            <textarea
+                            <Label for="cancellation_reason">Motivo de cancelación</Label>
+                            <Textarea
                                 id="cancellation_reason"
                                 v-model="cancelForm.cancellation_reason"
-                                class="min-h-[100px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                                placeholder="Enter cancellation reason..."
+                                rows="3"
+                                placeholder="Describí el motivo…"
                                 required
                             />
                             <InputError :message="cancelForm.errors.cancellation_reason" />
                         </div>
 
                         <DialogFooter>
-                            <Button type="button" variant="outline" @click="cancelDialogOpen = false">Cancel</Button>
-                            <Button type="submit" variant="destructive" :disabled="cancelForm.processing">Confirm</Button>
+                            <Button type="button" variant="outline" @click="cancelDialogOpen = false">Cancelar</Button>
+                            <Button type="submit" variant="destructive" :disabled="cancelForm.processing">Confirmar cancelación</Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>

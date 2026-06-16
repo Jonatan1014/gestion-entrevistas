@@ -20,6 +20,7 @@ describe('INT-005: Interview Observations', function () {
 
         $response = $this->actingAs($admin)->post("/interviews/{$interview->id}/complete", [
             'observations' => 'Candidate demonstrated strong technical skills',
+            'score' => 8,
         ]);
 
         $response->assertRedirect();
@@ -27,6 +28,7 @@ describe('INT-005: Interview Observations', function () {
             'id' => $interview->id,
             'status' => InterviewStatus::COMPLETED->value,
             'observations' => 'Candidate demonstrated strong technical skills',
+            'score' => 8,
         ]);
     });
 
@@ -35,7 +37,9 @@ describe('INT-005: Interview Observations', function () {
         $admin = intCreateAdmin();
         $interview = Interview::factory()->create(['status' => InterviewStatus::PENDING]);
 
-        $response = $this->actingAs($admin)->post("/interviews/{$interview->id}/complete");
+        $response = $this->actingAs($admin)->post("/interviews/{$interview->id}/complete", [
+            'score' => 5,
+        ]);
 
         $response->assertSessionHasErrors(['observations']);
         $this->assertDatabaseHas('interviews', [

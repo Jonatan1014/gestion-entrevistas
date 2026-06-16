@@ -28,6 +28,7 @@ class Interview extends Model
         'status',
         'cancellation_reason',
         'observations',
+        'score',
         'completed_at',
     ];
 
@@ -41,6 +42,7 @@ class Interview extends Model
         return [
             'scheduled_at' => 'datetime',
             'completed_at' => 'datetime',
+            'score' => 'integer',
             'type' => InterviewType::class,
             'status' => InterviewStatus::class,
         ];

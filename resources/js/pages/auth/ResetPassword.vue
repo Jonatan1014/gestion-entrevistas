@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
+import { LoaderCircle, Lock } from 'lucide-vue-next';
 
 interface Props {
     token: string;
@@ -31,49 +31,56 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthLayout title="Reset password" description="Please enter your new password below">
-        <Head title="Reset password" />
+    <AuthLayout title="Restablecer contraseña" description="Elegí una nueva contraseña para tu cuenta">
+        <Head title="Restablecer contraseña" />
 
-        <form @submit.prevent="submit">
-            <div class="grid gap-6">
+        <form @submit.prevent="submit" class="flex flex-col gap-6" novalidate>
+            <div class="grid gap-5">
                 <div class="grid gap-2">
                     <Label for="email">Email</Label>
-                    <Input id="email" type="email" name="email" autocomplete="email" v-model="form.email" class="mt-1 block w-full" readonly />
-                    <InputError :message="form.errors.email" class="mt-2" />
+                    <Input
+                        id="email"
+                        type="email"
+                        autocomplete="email"
+                        v-model="form.email"
+                        readonly
+                        class="bg-muted"
+                    />
+                    <InputError :message="form.errors.email" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Password</Label>
+                    <Label for="password">Nueva contraseña</Label>
                     <Input
                         id="password"
                         type="password"
-                        name="password"
+                        required
                         autocomplete="new-password"
                         v-model="form.password"
-                        class="mt-1 block w-full"
                         autofocus
-                        placeholder="Password"
+                        placeholder="Mínimo 8 caracteres"
+                        :aria-invalid="!!form.errors.password"
                     />
                     <InputError :message="form.errors.password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation"> Confirm Password </Label>
+                    <Label for="password_confirmation">Confirmar contraseña</Label>
                     <Input
                         id="password_confirmation"
                         type="password"
-                        name="password_confirmation"
+                        required
                         autocomplete="new-password"
                         v-model="form.password_confirmation"
-                        class="mt-1 block w-full"
-                        placeholder="Confirm password"
+                        placeholder="Repetí tu contraseña"
                     />
                     <InputError :message="form.errors.password_confirmation" />
                 </div>
 
-                <Button type="submit" class="mt-4 w-full" :disabled="form.processing">
-                    <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    Reset password
+                <Button type="submit" class="w-full" :disabled="form.processing" size="lg">
+                    <LoaderCircle v-if="form.processing" class="mr-2 h-4 w-4 animate-spin" />
+                    <Lock v-else class="mr-2 h-4 w-4" />
+                    {{ form.processing ? 'Restableciendo…' : 'Restablecer contraseña' }}
                 </Button>
             </div>
         </form>

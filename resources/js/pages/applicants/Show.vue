@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ApplicantStatusBadge from '@/components/applicant/ApplicantStatusBadge.vue';
+import { Eye, Download, Trash2, Upload } from 'lucide-vue-next';
 
 const props = defineProps<{
     applicant: {
@@ -52,12 +53,12 @@ const props = defineProps<{
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Applicants', href: '/applicants' },
+    { title: 'Postulantes', href: '/applicants' },
     { title: props.applicant.name, href: `/applicants/${props.applicant.id}` },
 ];
 
 const formatDate = (date: string) => {
-    return new Date(date).toLocaleString();
+    return new Date(date).toLocaleString('es-AR');
 };
 
 const formatBytes = (bytes: number) => {
@@ -67,6 +68,8 @@ const formatBytes = (bytes: number) => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
+
+const docTypeLabel = (type: string) => type === 'cv' ? 'CV' : 'Certificado';
 </script>
 
 <template>
@@ -78,30 +81,34 @@ const formatBytes = (bytes: number) => {
                 <div class="flex items-center gap-3">
                     <h1 class="text-2xl font-semibold">{{ applicant.name }}</h1>
                     <span v-if="applicant.is_blocked" class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900 dark:text-red-300">
-                        Blocked
+                        Bloqueado
                     </span>
                     <span v-else class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-300">
-                        Active
+                        Activo
                     </span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <Link v-if="canEditApplicants" :href="route('applicants.edit', applicant.id)">
-                        <Button variant="outline">Edit</Button>
-                    </Link>
+                    <Button v-if="canEditApplicants" as-child variant="outline">
+                        <Link :href="route('applicants.edit', applicant.id)">Editar</Link>
+                    </Button>
                     <template v-if="canBlockApplicants">
-                        <Link v-if="!applicant.is_blocked" :href="route('applicants.block', applicant.id)" method="post" :data="{ block_reason: 'Block reason placeholder' }">
-                            <Button variant="destructive">Block</Button>
-                        </Link>
-                        <Link v-else :href="route('applicants.unblock', applicant.id)" method="post">
-                            <Button variant="outline">Unblock</Button>
-                        </Link>
+                        <Button v-if="!applicant.is_blocked" as-child variant="destructive">
+                            <Link :href="route('applicants.block', applicant.id)" method="post" :data="{ block_reason: 'Motivo del bloqueo' }">
+                                Bloquear
+                            </Link>
+                        </Button>
+                        <Button v-else as-child variant="outline">
+                            <Link :href="route('applicants.unblock', applicant.id)" method="post">
+                                Desbloquear
+                            </Link>
+                        </Button>
                     </template>
                 </div>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Applicant Details</CardTitle>
+                    <CardTitle>Datos del postulante</CardTitle>
                 </CardHeader>
                 <CardContent class="space-y-4">
                     <div class="grid grid-cols-2 gap-4">
@@ -110,24 +117,24 @@ const formatBytes = (bytes: number) => {
                             <p class="text-sm">{{ applicant.email }}</p>
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-muted-foreground">Phone</p>
+                            <p class="text-sm font-medium text-muted-foreground">Teléfono</p>
                             <p class="text-sm">{{ applicant.phone }}</p>
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-muted-foreground">Address</p>
-                            <p class="text-sm">{{ applicant.address ?? 'Not provided' }}</p>
+                            <p class="text-sm font-medium text-muted-foreground">Dirección</p>
+                            <p class="text-sm">{{ applicant.address ?? 'No especificada' }}</p>
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-muted-foreground">Created By</p>
+                            <p class="text-sm font-medium text-muted-foreground">Registrado por</p>
                             <p class="text-sm">{{ applicant.created_by.name }}</p>
                         </div>
                     </div>
                     <Separator />
                     <div v-if="applicant.is_blocked" class="rounded-md bg-red-50 p-4 dark:bg-red-950">
-                        <p class="text-sm font-medium text-red-800 dark:text-red-300">Block Reason</p>
+                        <p class="text-sm font-medium text-red-800 dark:text-red-300">Motivo del bloqueo</p>
                         <p class="text-sm text-red-700 dark:text-red-400">{{ applicant.block_reason }}</p>
                         <p v-if="applicant.blocked_by" class="mt-1 text-xs text-red-600 dark:text-red-500">
-                            Blocked by {{ applicant.blocked_by.name }} on {{ formatDate(applicant.blocked_at!) }}
+                            Bloqueado por {{ applicant.blocked_by.name }} el {{ formatDate(applicant.blocked_at!) }}
                         </p>
                     </div>
                 </CardContent>
@@ -135,43 +142,62 @@ const formatBytes = (bytes: number) => {
 
             <Tabs default-value="documents" class="w-full">
                 <TabsList>
-                    <TabsTrigger value="documents">Documents</TabsTrigger>
-                    <TabsTrigger value="history">History</TabsTrigger>
-                    <TabsTrigger value="vacancies">Vacancies</TabsTrigger>
+                    <TabsTrigger value="documents">Documentos</TabsTrigger>
+                    <TabsTrigger value="history">Historial</TabsTrigger>
+                    <TabsTrigger value="vacancies">Vacantes</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="documents">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Documents</CardTitle>
+                            <CardTitle>Documentos</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div v-if="applicant.documents.length === 0" class="py-8 text-center text-muted-foreground">
-                                No documents uploaded.
+                                No hay documentos subidos.
                             </div>
                             <div v-else class="space-y-4">
                                 <div v-for="document in applicant.documents" :key="document.id" class="flex items-center justify-between rounded-lg border p-4">
                                     <div>
                                         <p class="font-medium">{{ document.original_name }}</p>
                                         <p class="text-sm text-muted-foreground">
-                                            {{ document.type }} · {{ formatBytes(document.size) }} · {{ formatDate(document.created_at) }}
+                                            {{ docTypeLabel(document.type) }} · {{ formatBytes(document.size) }} · {{ formatDate(document.created_at) }}
                                         </p>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <Link :href="route('applicants.documents.download', [applicant.id, document.id])">
-                                            <Button variant="outline" size="sm">Download</Button>
-                                        </Link>
-                                        <Link v-if="canCreateApplicants" :href="route('applicants.documents.destroy', [applicant.id, document.id])" method="delete">
-                                            <Button variant="destructive" size="sm">Delete</Button>
-                                        </Link>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            as="a"
+                                            :href="route('applicants.documents.preview', [applicant.id, document.id])"
+                                            target="_blank"
+                                        >
+                                            <Eye class="mr-1 h-3.5 w-3.5" />
+                                            Vista previa
+                                        </Button>
+                                        <Button as-child variant="outline" size="sm">
+                                            <Link :href="route('applicants.documents.download', [applicant.id, document.id])">
+                                                <Download class="mr-1 h-3.5 w-3.5" />
+                                                Descargar
+                                            </Link>
+                                        </Button>
+                                        <Button v-if="canCreateApplicants" as-child variant="destructive" size="sm">
+                                            <Link :href="route('applicants.documents.destroy', [applicant.id, document.id])" method="delete">
+                                                <Trash2 class="mr-1 h-3.5 w-3.5" />
+                                                Eliminar
+                                            </Link>
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="mt-6">
-                                <Link :href="route('applicants.documents.index', applicant.id)">
-                                    <Button variant="outline">Manage Documents</Button>
-                                </Link>
+                                <Button as-child variant="outline">
+                                    <Link :href="route('applicants.documents.index', applicant.id)">
+                                        <Upload class="mr-1 h-4 w-4" />
+                                        Gestionar documentos
+                                    </Link>
+                                </Button>
                             </div>
                         </CardContent>
                     </Card>
@@ -180,11 +206,11 @@ const formatBytes = (bytes: number) => {
                 <TabsContent value="history">
                     <Card>
                         <CardHeader>
-                            <CardTitle>History Timeline</CardTitle>
+                            <CardTitle>Historial de actividad</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div v-if="history.length === 0" class="py-8 text-center text-muted-foreground">
-                                No history available.
+                                Sin actividad registrada.
                             </div>
                             <div v-else class="space-y-4">
                                 <div v-for="(event, index) in history" :key="index" class="relative border-l-2 border-muted pl-4">
@@ -201,11 +227,11 @@ const formatBytes = (bytes: number) => {
                 <TabsContent value="vacancies">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Associated Vacancies</CardTitle>
+                            <CardTitle>Vacantes asociadas</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div v-if="applicant.vacancies.length === 0" class="py-8 text-center text-muted-foreground">
-                                Not associated with any vacancies.
+                                No está asociado a ninguna vacante.
                             </div>
                             <div v-else class="space-y-4">
                                 <div v-for="vacancy in applicant.vacancies" :key="vacancy.id" class="flex items-center justify-between rounded-lg border p-4">

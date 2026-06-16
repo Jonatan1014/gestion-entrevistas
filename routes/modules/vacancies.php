@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\VacancyStatus;
 use App\Http\Controllers\Vacancy\VacancyController;
 use Illuminate\Support\Facades\Route;
 

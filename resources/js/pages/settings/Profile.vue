@@ -22,7 +22,7 @@ defineProps<Props>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Profile settings',
+        title: 'Configuración del perfil',
         href: '/settings/profile',
     },
 ];
@@ -44,53 +44,52 @@ const submit = () => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <Head title="Profile settings" />
+        <Head title="Configuración del perfil" />
 
         <SettingsLayout>
             <div class="flex flex-col space-y-6">
-                <HeadingSmall title="Profile information" description="Update your name and email address" />
+                <HeadingSmall title="Información del perfil" description="Actualizá tu nombre y dirección de email" />
 
-                <form @submit.prevent="submit" class="space-y-6">
+                <form @submit.prevent="submit" class="space-y-6" novalidate>
                     <div class="grid gap-2">
-                        <Label for="name">Name</Label>
-                        <Input id="name" class="mt-1 block w-full" v-model="form.name" required autocomplete="name" placeholder="Full name" />
-                        <InputError class="mt-2" :message="form.errors.name" />
+                        <Label for="name">Nombre</Label>
+                        <Input id="name" v-model="form.name" required autocomplete="name" placeholder="Tu nombre completo" />
+                        <InputError :message="form.errors.name" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="email">Email address</Label>
+                        <Label for="email">Email</Label>
                         <Input
                             id="email"
                             type="email"
-                            class="mt-1 block w-full"
                             v-model="form.email"
                             required
-                            autocomplete="username"
-                            placeholder="Email address"
+                            autocomplete="email"
+                            placeholder="email@ejemplo.com"
                         />
-                        <InputError class="mt-2" :message="form.errors.email" />
+                        <InputError :message="form.errors.email" />
                     </div>
 
                     <div v-if="mustVerifyEmail && !user.email_verified_at">
-                        <p class="mt-2 text-sm text-neutral-800">
-                            Your email address is unverified.
+                        <p class="text-sm text-muted-foreground">
+                            Tu email no está verificado.
                             <Link
                                 :href="route('verification.send')"
                                 method="post"
                                 as="button"
-                                class="focus:outline-hidden rounded-md text-sm text-neutral-600 underline hover:text-neutral-900 focus:ring-2 focus:ring-offset-2"
+                                class="rounded-md text-sm text-[#0d0d0d] underline hover:text-[#51eead] dark:text-[#51eead] dark:hover:text-white focus:ring-2 focus:ring-[#51eead]"
                             >
-                                Click here to re-send the verification email.
+                                Hacé clic acá para reenviar el email de verificación.
                             </Link>
                         </p>
 
-                        <div v-if="status === 'verification-link-sent'" class="mt-2 text-sm font-medium text-green-600">
-                            A new verification link has been sent to your email address.
+                        <div v-if="status === 'verification-link-sent'" class="mt-2 text-sm font-medium text-[#51eead]">
+                            Se envió un nuevo enlace de verificación a tu email.
                         </div>
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <Button :disabled="form.processing">Save</Button>
+                        <Button :disabled="form.processing">Guardar cambios</Button>
 
                         <TransitionRoot
                             :show="form.recentlySuccessful"
@@ -99,7 +98,7 @@ const submit = () => {
                             leave="transition ease-in-out"
                             leave-to="opacity-0"
                         >
-                            <p class="text-sm text-neutral-600">Saved.</p>
+                            <p class="text-sm text-muted-foreground">Guardado.</p>
                         </TransitionRoot>
                     </div>
                 </form>

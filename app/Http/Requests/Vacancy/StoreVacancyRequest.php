@@ -28,6 +28,8 @@ class StoreVacancyRequest extends FormRequest
             'requirements' => ['required', 'string'],
             'status' => ['sometimes', 'string', 'in:' . implode(',', array_column(VacancyStatus::cases(), 'value'))],
             'min_grade' => ['nullable', 'numeric', 'min:0', 'max:999.99'],
+            'test_ids' => ['nullable', 'array'],
+            'test_ids.*' => ['exists:tests,id'],
         ];
     }
 }
